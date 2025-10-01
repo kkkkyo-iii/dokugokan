@@ -35,6 +35,7 @@ build/
 
 ### プロジェクト固有のファイル ###
 dokugokan/src/main/resources/application.properties
+.env
 
 target/
 pom.xml.tag
