@@ -33,6 +33,9 @@ build/
 ### VS Code ###
 .vscode/
 
+### プロジェクト固有のファイル ###
+dokugokan/src/main/resources/application.properties
+
 target/
 pom.xml.tag
 pom.xml.releaseBackup
@@ -45,9 +48,13 @@ buildNumber.properties
 # https://maven.apache.org/wrapper/#usage-without-binary-jar
 .mvn/wrapper/maven-wrapper.jar
 
+
+
 # Eclipse m2e generated files
 # Eclipse Core
 .project
 # JDT-specific (Eclipse Java Development Tools)
 .classpath
+
+
 
