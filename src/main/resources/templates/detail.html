@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security6">
+
+<head>
+	<meta charset="UTF-8">
+	<title th:text="${movie.title} + ' - 詳細'">作品詳細</title>
+
+	<head>
+		<link rel="stylesheet" th:href="@{/css/style.css}">
+		<link rel="stylesheet" th:href="@{/css/common.css}">
+	</head>
+</head>
+
+<body>
+	<div th:replace="~{fragments/header :: header}"></div>
+	<main>
+
+	<div class="detail-movie">
+		<img th:if="${movie.posterPath != null}" th:src="@{'https://image.tmdb.org/t/p/w300' + ${movie.posterPath}}"
+			alt="ポスター画像" style="float: left; margin-right: 20px;">
+
+		<h1 th:text="${movie.title}">映画タイトル</h1>
+
+		<p th:if="${movie.releaseDate != null}">
+			<strong>公開日:</strong> <span th:text="${movie.releaseDate}">2025-01-01</span>
+		</p>
+
+		<p th:text="${movie.overview}">映画の概要がここに表示されます。</p>
+		<div style="margin-top: 10px;">
+			<strong>ジャンル:</strong>
+			<span th:each="genre, iterStat : ${movie.genres}"
+				style="margin-right: 5px; background-color: #eee; padding: 2px 5px; border-radius: 3px;">
+				<a th:href="@{/movies/by_genre/{id}(id=${genre.id})}" th:text="${genre.name}">アクション</a>
+				<span th:if="${!iterStat.last}">,</span>
+			</span>
+		</div>
+
+		<div th:if="${movie != null}" sec:authorize="isAuthenticated()" style="margin-top: 20px;">
+			<div th:if="${!isFavorited}">
+				<form th:action="@{/favorites/add/{movieId}(movieId=${movie.id})}" method="post">
+					<button type="submit">お気に入りに登録</button>
+				</form>
+			</div>
+			<div th:if="${isFavorited}">
+				<form th:action="@{/favorites/remove/{movieId}(movieId=${movie.id})}" method="post">
+					<button type="submit" style="background-color: #dc3545; color: white;">お気に入りから解除</button>
+				</form>
+			</div>
+		</div>
+
+		<div style="clear: both;"></div>
+
+		<div class="vote-section">
+			<h2>A. 「気まずさ」投票</h2>
+
+			<div th:if="${voteResults.totalAwkwardVotes > 0}">
+				<strong>人と一緒に見て気まずいか？</strong>
+				<div class="awkward-bar-container" style="margin-top: 10px;">
+					<div class="awkward-bar-yes" th:style="'width:' + ${voteResults.awkwardPercent} + '%'">
+						<span th:text="'気まずい ' + ${voteResults.awkwardPercent} + '%'"></span>
+					</div>
+					<div class="awkward-bar-no" th:style="'width:' + ${voteResults.notAwkwardPercent} + '%'">
+						<span th:text="'気まずくない ' + ${voteResults.notAwkwardPercent} + '%'"></span>
+					</div>
+				</div>
+				<small th:text="${voteResults.totalAwkwardVotes} + '票の投票'"> </small>
+			</div>
+			<div th:if="${voteResults.totalAwkwardVotes == 0}">
+				<p>まだ「気まずさ」に関する投票がありません。</p>
+			</div>
+
+			<div th:if="${!#lists.isEmpty(voteResults.awkwardReasonTags)}" style="margin-top: 20px;">
+				<strong>気まずい理由:</strong>
+				<ul class="tag-list">
+					<li
+						th:each="tag : ${voteResults.awkwardReasonTags.subList(0, #lists.size(voteResults.awkwardReasonTags) > 3 ? 3 : #lists.size(voteResults.awkwardReasonTags))}">
+						<span class="tag-name" th:text="${tag.tagName}">タグ名</span>
+						<span class="tag-count" th:text="${tag.voteCount} + '票'"></span>
+					</li>
+				</ul>
+				<div th:if="${#lists.size(voteResults.awkwardReasonTags) > 3}">
+					<button type="button" class="show-more-button"
+						onclick="document.getElementById('awkwardHiddenTags').style.display='block'; this.style.display='none';">
+						詳細を見る...
+					</button>
+					<ul class="tag-list hidden-tags" id="awkwardHiddenTags">
+						<li
+							th:each="tag : ${voteResults.awkwardReasonTags.subList(3, #lists.size(voteResults.awkwardReasonTags))}">
+							<span class="tag-name" th:text="${tag.tagName}">タグ名</span>
+							<span class="tag-count" th:text="${tag.voteCount} + '票'"></span>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+
+		<div class="vote-section">
+			<h2>B. 「読後感」タグ</h2>
+
+			<div th:if="${!#lists.isEmpty(voteResults.impressionTags)}">
+				<ul class="tag-list">
+					<li
+						th:each="tag : ${voteResults.impressionTags.subList(0, #lists.size(voteResults.impressionTags) > 5 ? 5 : #lists.size(voteResults.impressionTags))}">
+						<span class="tag-name" th:text="${tag.tagName}">タグ名</span>
+						<span class="tag-count" th:text="${tag.voteCount} + '票'"></span>
+					</li>
+				</ul>
+				<div th:if="${#lists.size(voteResults.impressionTags) > 5}">
+					<button type="button" class="show-more-button"
+						onclick="document.getElementById('impressionHiddenTags').style.display='block'; this.style.display='none';">
+						もっと見る...
+					</button>
+					<ul class="tag-list hidden-tags" id="impressionHiddenTags">
+						<li
+							th:each="tag : ${voteResults.impressionTags.subList(5, #lists.size(voteResults.impressionTags))}">
+							<span class="tag-name" th:text="${tag.tagName}">タグ名</span>
+							<span class="tag-count" th:text="${tag.voteCount} + '票'"></span>
+						</li>
+					</ul>
+				</div>
+			</div>
+			<div th:if="${#lists.isEmpty(voteResults.impressionTags)}">
+				<p>まだ「読後感」に関する投票がありません。</p>
+			</div>
+		</div>
+
+
+
+		<button type="button" class="floating-button" id="openModalBtn" sec:authorize="isAuthenticated()">
+			[ + 投票する ]
+		</button>
+
+		<div class="modal-overlay" id="modalOverlay">
+			<div class="modal-content">
+
+				<span class="modal-close" id="closeModalBtn">&times;</span>
+
+				<h2>映画の評価を投票する</h2>
+
+				<form th:action="@{/vote/{movieId}(movieId=${movie.id})}" method="post">
+
+					<div th:if="${userVoteStatus.hasVoted}"
+						style="background-color: #fff3cd; border: 1px solid #ffeeba; padding: 10px; border-radius: 5px; margin-bottom: 15px;">
+						<strong>注意:</strong> 既に投票済みです。再度投票すると、以前の投票内容は上書きされます。
+					</div>
+
+					<fieldset>
+						<legend>Q1. 人と一緒に見て気まずいですか？</legend>
+						<div>
+							<input type="radio" id="awkward_true" name="awkward" value="true" required
+								th:checked="${userVoteStatus.awkwardVote == true}">
+							<label for="awkward_true">はい、気まずい</label>
+						</div>
+						<div>
+							<input type="radio" id="awkward_false" name="awkward" value="false"
+								th:checked="${userVoteStatus.awkwardVote == false}">
+							<label for="awkward_false">いいえ、気まずくない</label>
+						</div>
+					</fieldset>
+
+					<fieldset>
+						<legend>Q2. （気まずい場合）その理由は？（複数選択可）</legend>
+						<div th:each="group : ${awkwardReasonTagGroups}">
+							<h4 th:text="${group.key}" style="margin-top: 10px; margin-bottom: 5px;">見出し1</h4>
+							<div th:each="tag : ${group.value}" style="margin: 5px; display: inline-block;">
+								<input type="checkbox" th:id="'tag_awkward_' + ${tag.id}" name="awkwardReasonTagIds"
+									th:value="${tag.id}"
+									th:checked="${userVoteStatus.awkwardReasonTagIds.contains(tag.id)}">
+								<label th:for="'tag_awkward_' + ${tag.id}" th:text="${tag.name}">タグ名</label>
+							</div>
+						</div>
+					</fieldset>
+
+					<fieldset>
+						<legend>Q3. この映画の読後感は？（複数選択可）</legend>
+						<div th:each="group : ${impressionTagGroups}">
+							<h4 th:text="${group.key}" style="margin-top: 10px; margin-bottom: 5px;">見出し2</h4>
+							<div th:each="tag : ${group.value}" style="margin: 5px; display: inline-block;">
+								<input type="checkbox" th:id="'tag_impression_' + ${tag.id}" name="impressionTagIds"
+									th:value="${tag.id}"
+									th:checked="${userVoteStatus.impressionTagIds.contains(tag.id)}">
+								<label th:for="'tag_impression_' + ${tag.id}" th:text="${tag.name}">タグ名</label>
+							</div>
+						</div>
+					</fieldset>
+
+					<div style="text-align: right; margin-top: 20px;">
+						<button type="submit">投票する</button>
+					</div>
+
+				</form>
+
+			</div>
+		</div>
+
+		<script>
+			// HTML要素を取得
+			const openBtn = document.getElementById('openModalBtn');
+			// 8. 閉じるボタンが複数あった問題を修正
+			const closeBtn = document.getElementById('closeModalBtn');
+			const modal = document.getElementById('modalOverlay');
+
+			// [ + 投票する ] ボタンがクリックされた時の処理
+			// (ボタンが存在する場合のみリスナーを登録)
+			if (openBtn) {
+				openBtn.onclick = function () {
+					modal.style.display = 'flex'; // モーダルを表示 (CSSの display: flex に合わせる)
+				}
+			}
+
+			// [ × ] ボタンがクリックされた時の処理
+			if (closeBtn) { // 念のため存在チェック
+				closeBtn.onclick = function () {
+					modal.style.display = 'none'; // モーダルを非表示
+				}
+			}
+
+			// モーダルの背景部分がクリックされた時の処理
+			window.onclick = function (event) {
+				if (event.target == modal) {
+					modal.style.display = 'none'; // モーダルを非表示
+				}
+			}
+		</script>
+		</div>
+
+	</main>
+	<div th:replace="~{fragments/footer :: footer}"></div>
+</body>
+
+</html>

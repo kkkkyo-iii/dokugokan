@@ -1,0 +1,206 @@
+/* * common.css
+ * ヘッダー全体のレイアウト
+ */
+html {
+	margin: 0;
+	padding: 0;
+	height: 100%;
+	scroll-behavior: smooth;
+}
+
+
+body {
+	display: flex;
+	/* ★ Flexboxコンテナにする */
+	flex-direction: column;
+	/* ★ 子要素を縦に並べる */
+	min-height: 100vh;
+	/* ★ body全体の最小の高さを画面の高さ100%にする */
+	margin: 0;
+	padding: 0;
+	/* (margin: 0; などを設定している場合はそのままでOK) */
+}
+
+main {
+	flex-grow: 1;
+	/* ★ これが最も重要。空きスペースを埋めるように伸びる */
+
+	/* (例: コンテンツ領域に余白を持たせる) */
+	/* padding: 20px; */
+}
+
+.common-header {
+	/* ▼ Flexboxを適用 ▼ */
+	height: 100px;
+	/* ★ 1. まずヘッダーの高さを決める (例: 60px) */
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	/* これで中の要素が垂直方向に中央揃えになる */
+	padding: 0 20px;
+	/* 上下の padding は 0 にしておくと高さ計算が楽 */
+	background-color: rgb(90, 255, 235, 0.3);
+	color: black;
+	box-sizing: border-box;
+	margin: 0;
+}
+
+/* ■ 左ブロック: ロゴ */
+.header-left .logo-image {
+	height: 100px;
+	/* ロゴの高さを指定（例） */
+	width: auto;
+
+	object-fit: contain;
+}
+
+/* ■ 中央ブロック: 検索フォーム */
+.header-search {
+	/* 中央の要素が幅を自動で取るように */
+	/* 検索バーを中央に寄せる（オプション）*/
+	margin: 0 20px;
+	height: 100%;
+	/* 左右のブロックとの間に余白 */
+	display: flex;
+	/* Flexbox コンテナにする */
+	align-items: center;
+	/* 子要素(フォーム)を垂直方向(上下)の中央に配置 */
+
+	transform: translateX(200px);
+}
+/* === 【下段】サブヘッダーのスタイル === */
+.sub-header {
+	
+    background-color: #f0f8ff; /* 上段の水色に合う、ごく薄い色 (または白 #fff) */
+    border-bottom: 1px solid #ddd;
+    padding: 20px 0;
+    text-align: center; /* リンクを中央寄せ */
+}
+
+.sub-header-content {
+    /* リンクを横並びにする */
+    display: flex;
+    justify-content: center;
+    gap: 100px; /* リンク間の間隔 */
+}
+
+.sub-nav-link {
+    text-decoration: none;
+    color: #555;
+    font-weight: bold;
+    font-size: 1rem;
+    padding-bottom: 3px;
+    border-bottom: 2px solid transparent;
+    transition: all 0.3s;
+}
+
+.sub-nav-link:hover {
+    color: #007bff;
+    border-bottom: 2px solid #007bff; /* ホバー時に下線を引く */
+}
+.search-form {
+	display: flex;
+	/* 検索欄とボタンを横並びにする */
+	justify-content: center;
+	/* フォーム内を中央揃え */
+}
+
+.search-input {
+	width: 300px;
+	/* 検索欄の幅（例） */
+	padding: 8px;
+	border: none;
+	border-radius: 5px 0 0 5px;
+	/* 左側だけ角丸 */
+}
+
+.search-button {
+	padding: 8px 12px;
+	border: none;
+	background-color: #555;
+	color: white;
+	cursor: pointer;
+	border-radius: 0 5px 5px 0;
+	/* 右側だけ角丸 */
+}
+
+/* ■ 右ブロック: ログイン/お気に入り */
+.header-right {
+	display: flex;
+	/* 内部のボタンも横並びにする */
+	align-items: center;
+}
+
+/* ログイン時・未ログイン時のボタン共通スタイル（例） */
+.header-right a,
+.header-right .button-logout {
+	margin-left: 15px;
+	/* ボタン間の余白 */
+	padding: 8px 15px;
+	text-decoration: none;
+	color: white;
+	background-color: rgb(0, 128, 255);
+	/* ボタンの背景色 */
+	border-radius: 5px;
+	border: none;
+	cursor: pointer;
+}
+
+
+.header-right .button-register {
+	background-color: rgb(253, 166, 4, 0.7);
+	/* 新規登録を目立たせる色（画像参考） */
+}
+
+.header-right .logout-form {
+	display: inline;
+	/* formタグによる改行を防ぐ */
+	margin: 0;
+	padding: 0;
+	background-color: blue;
+}
+
+.common-footer {
+	padding: 20px;
+	text-align: center;
+	background-color: #f9f9f9;
+	/* 背景色（ヘッダーとは違う色） */
+	border-top: 1px solid #eee;
+	/* 上部に境界線 */
+	color: #777;
+	font-size: 0.9em;
+	flex-shrink: 0;
+	/* コンテンツが多くてもフッターが縮まないように */
+}
+
+/* フッター内のロゴ画像のサイズ調整 */
+.common-footer .footer-logo {
+	height: 20px;
+	/* ロゴの高さを指定 (例: 20px) */
+	width: auto;
+	margin-bottom: 10px;
+	/* ロゴとテキストの間に余白 */
+}
+
+/* フッター内のテキストのスタイル */
+.common-footer p {
+	margin: 0;
+	padding: 0;
+}
+
+.container {
+	width: 90%;
+	max-width: 1000px;
+	/* 少し狭めて見やすく */
+	margin: 0 auto;
+	padding: 50px 0;
+}
+
+.section-title {
+	font-size: 2.5em;
+	text-align: center;
+	margin-top: 0;
+	margin-bottom: 50px;
+	color: #333;
+}
+

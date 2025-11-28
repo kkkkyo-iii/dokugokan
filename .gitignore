@@ -34,7 +34,7 @@ build/
 .vscode/
 
 ### プロジェクト固有のファイル ###
-dokugokan/src/main/resources/application.properties
+
 .env
 
 target/

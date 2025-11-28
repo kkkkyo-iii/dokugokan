@@ -1,0 +1,44 @@
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<body>
+
+    <header th:fragment="header">
+
+        <div class="common-header">
+            
+            <div class="header-left">
+                <a th:href="@{/}"> <img th:src="@{/images/logo_image.png}" alt="ロゴ（ホームへ）" class="logo-image">
+                </a>
+            </div>
+
+            <div class="header-search">
+                <form th:action="@{/movies/search}" method="post" class="search-form">
+                    <input type="text" name="query" placeholder="映画を検索..." class="search-input">
+                    <button type="submit" class="search-button">🔍</button>
+                </form>
+            </div>
+
+            <div class="header-right">
+                <div sec:authorize="isAnonymous()">
+                    <a th:href="@{/login}" class="button-login">ログイン</a>
+                    <a th:href="@{/register}" class="button-register">新規登録</a>
+                </div>
+                <div sec:authorize="isAuthenticated()">
+                    <a th:href="@{/user/favorites}" class="button-favorites">お気に入り</a>
+                    <form th:action="@{/logout}" method="post" class="logout-form">
+                        <button type="submit" class="button-logout">ログアウト</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="sub-header" th:if="${isTopPage}">
+            <div class="sub-header-content">
+                <a th:href="@{/#about}" class="sub-nav-link">このサイトについて</a>
+                <a th:href="@{/#howto}" class="sub-nav-link">使い方</a>
+            </div>
+        </div>
+
+    </header>
+
+</body>
+</html>

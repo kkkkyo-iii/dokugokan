@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>エラー</title>
+    <style>
+        body { font-family: sans-serif; text-align: center; padding: 40px; }
+        .error-container { max-width: 600px; margin: 0 auto; }
+        .status-code { font-size: 6em; color: #dc3545; }
+        .error-message { font-size: 1.5em; color: #6c757d; }
+        a { color: #007bff; text-decoration: none; }
+    </style>
+</head>
+<body>
+    <div class="error-container">
+        <div class="status-code" th:text="${status}">500</div>
+        <div class="error-message" th:text="${error}">Internal Server Error</div>
+        
+        <p>申し訳ありません。ページが見つからないか、問題が発生しました。</p>
+        
+        <p>
+            <strong>パス:</strong> <span th:text="${path}">/unknown</span>
+        </p>
+        
+        <hr>
+        
+        <a href="/">ホームに戻る</a>
+    </div>
+</body>
+</html>

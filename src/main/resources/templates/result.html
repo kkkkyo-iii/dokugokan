@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="UTF-8">
+	<title>検索結果</title>
+
+
+	<link rel="stylesheet" th:href="@{/css/style.css}">
+	<link rel="stylesheet" th:href="@{/css/common.css}">
+
+</head>
+
+<body>
+	<main>
+		<div th:replace="~{fragments/header :: header}"></div>
+		<h1>検索結果</h1>
+
+		<div th:if="${not #lists.isEmpty(movies)}">
+			<div th:each="movie : ${movies}" style="border: 1px solid #ccc; margin-bottom: 20px; padding: 10px;">
+
+				<img th:if="${movie.posterPath != null}"
+					th:src="@{'https://image.tmdb.org/t/p/w200' + ${movie.posterPath}}" alt="ポスター画像"
+					style="float: left; margin-right: 10px;">
+
+				<h2>
+					<a th:href="@{/movie/{tmdbId}(tmdbId=${movie.tmdbId})}" th:text="${movie.title}">映画タイトル</a>
+				</h2>
+
+				<div style="clear: both;"></div>
+			</div>
+		</div>
+
+		
+	</main>
+	<div th:replace="~{fragments/footer :: footer}"></div>
+</body>
+
+</html>

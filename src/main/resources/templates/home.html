@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns:th="http://www.thymeleaf.org">
+<meta charset="UTF-8">
+<link rel="stylesheet" th:href="@{/css/style.css}">
+<link rel="stylesheet" th:href="@{/css/common.css}">
+<link rel="icon" th:href="@{/favicon.ico}">
+<title>読後感</title>
+</head>
+
+<body>
+	<div th:replace="~{fragments/header :: header}"></div>
+	<main>
+		<section class="hero-section">
+			<div class="container">
+				<h1 class="hero-title">映画で、もう失敗したくないあなたへ</h1>
+				<p class="hero-subtitle">
+
+					「読後感」はそんなあなたのためのサービスです。
+				</p>
+				<a th:href="@{/movies/search}" class="cta-button">
+					映画を探しに行く
+				</a>
+			</div>
+
+		</section>
+
+		<section class="problems-section">
+			<div class="container">
+				<h2 class="section-title">こんなお悩みありませんか？</h2>
+				<div class="problem-list">
+					<div class="problem-item">
+						<img th:src="@{/images/avatar1.png}" alt="アイコン1" class="problem-icon">
+						<div class="problem-bubble">
+							<p>デートで観たら、R15指定じゃないのに気まずいシーンがあって失敗した…</p>
+						</div>
+					</div>
+					<div class="problem-item">
+						<img th:src="@{/images/avatar2.png}" alt="アイコン2" class="problem-icon">
+						<div class="problem-bubble">
+							<p>ネタバレは嫌だけど、後味が悪くて気分が落ち込む映画は避けたい。</p>
+						</div>
+					</div>
+					<div class="problem-item">
+						<img th:src="@{/images/avatar3.png}" alt="アイコン3" class="problem-icon">
+						<div class="problem-bubble">
+							<p>AIのあらすじじゃ分からない。「観た人」のリアルな「気分」が知りたい。</p>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<section class="solution-section">
+            <div class="container">
+                <div class="solution-content">
+                    <h2 class="section-title">その不安、<br>「数字」と「タグ」で見える化しました。</h2>
+                    
+                    <p class="solution-text">
+                        もう、あらすじを読み込んでネタバレを踏む必要はありません。<br>
+                        「気まずさメーター」と「読後感タグ」を見るだけで、その映画があなたに合うか一目で分かります。
+                    </p>
+
+                    <div class="solution-image-wrapper">
+                        <img th:src="@{/images/feature-image.png}" alt="気まずさメーターとタグ一覧" class="solution-image">
+                    </div>
+                </div>
+            </div>
+        </section>
+		<section class="howto-section" id="howto" style="padding: 60px 0; text-align: center; background-color: #fff;">
+			<div class="container">
+				<h2 class="section-title">使い方</h2>
+				<div style="display: flex; justify-content: center; gap: 30px; flex-wrap: wrap;">
+					<div style="flex: 1; min-width: 250px;">
+						<h3 style="color: #007bff;">STEP 1</h3>
+						<p>気になる映画を検索</p>
+					</div>
+					<div style="flex: 1; min-width: 250px;">
+						<h3 style="color: #007bff;">STEP 2</h3>
+						<p>「気まずさ」や「読後感」を確認</p>
+					</div>
+					<div style="flex: 1; min-width: 250px;">
+						<h3 style="color: #007bff;">STEP 3</h3>
+						<p>あなたの感想も投票！</p>
+					</div>
+				</div>
+				<a th:href="@{/movies/search}" class="cta-button" style="margin-top: 40px;">はじめる</a>
+			</div>
+		</section>
+
+
+
+	</main>
+	<div th:replace="~{fragments/footer :: footer}"></div>
+
+</body>
+
+</html>
