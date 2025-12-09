@@ -80,4 +80,19 @@ public class FavoriteService {
         }
         return favoriteRepository.findByUserAndMovie(user, movie).isPresent();
     }
+    
+    /**
+     *  ユーザーのお気に入り映画リストを取得する 
+     * @param user 対象ユーザー
+     * @return 映画のリスト
+     */
+    public java.util.List<Movie> getFavoriteMovies(User user) {
+        // 1. リポジトリから Favorite エンティティのリストを取得
+        java.util.List<Favorite> favorites = favoriteRepository.findByUserOrderByIdDesc(user);
+
+        // 2. Favorite のリストを stream で回して、中の Movie だけを取り出してリストにする
+        return favorites.stream()
+                .map(Favorite::getMovie) // Favorite から Movie を取り出す
+                .collect(java.util.stream.Collectors.toList());
+    }
 }

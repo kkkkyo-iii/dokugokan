@@ -144,6 +144,14 @@ main {
 	border-radius: 5px;
 	border: none;
 	cursor: pointer;
+	
+	/*  ここから追加・修正（サイズずれ防止）  */
+    display: inline-block;      
+    font-family: inherit;       
+    font-size: 1rem;            
+    line-height: 1.5;           
+    vertical-align: middle;    
+    box-sizing: border-box;    
 }
 
 
@@ -157,9 +165,23 @@ main {
 	/* formタグによる改行を防ぐ */
 	margin: 0;
 	padding: 0;
-	background-color: blue;
+}
+ .header-right .button-mypage {
+    background-color: rgb(253, 166, 4, 0.7); /* 新規登録と同じ黄色 */
 }
 
+/* ログアウトボタン：赤色 */
+.header-right .button-logout {
+    background-color: #dc3545;
+}
+
+/* ホバー時の色（少し濃くする） */
+.header-right .button-favorites:hover {
+    background-color: rgb(220, 140, 0);
+}
+.header-right .button-logout:hover {
+    background-color: #c82333;
+}
 .common-footer {
 	padding: 20px;
 	text-align: center;

@@ -17,7 +17,7 @@
 
             <div class="search-box">
                 <h2 style="font-size: 1.2em; margin-bottom: 15px;">タイトルで検索</h2>
-                <form th:action="@{/movies/search}" method="post" style="display: flex; justify-content: center;">
+                <form th:action="@{/movies/result}" method="get" style="display: flex; justify-content: center;">
                     <input type="text" name="query" placeholder="映画のタイトルを入力..." class="search-input" required>
                     <button type="submit" class="search-submit">検索</button>
                 </form>

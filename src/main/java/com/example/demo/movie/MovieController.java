@@ -9,7 +9,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.example.demo.movie.dto.TmdbMovieDto;
@@ -52,10 +51,10 @@ public class MovieController {
     }
 
     /**
-     * [修正] 検索を「実行」する (POSTリクエスト)
+     * 検索を「実行」する 
      * search.htmlのフォームから送信された時はここに来る
      */
-    @PostMapping("/movies/search") // @GetMapping から @PostMapping に変更
+    @GetMapping("/movies/result") 
     public String executeSearch(@RequestParam("query") String query, Model model) {
         // 1. Serviceを呼び出し、DB保存されていない「DTOのリスト」を取得
         List<TmdbMovieDto> movieDtos = movieService.searchMoviesFromApi(query);

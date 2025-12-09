@@ -37,7 +37,9 @@ public class SecurityConfig {
             )
             .formLogin(login -> login
                 .loginPage("/login") 
-                .defaultSuccessUrl("/movies/search", true) 
+                .loginProcessingUrl("/login")
+                .defaultSuccessUrl("/mypage", true) 
+                .failureUrl("/login?error")
                 .permitAll() 
             )
             .logout(logout -> logout
