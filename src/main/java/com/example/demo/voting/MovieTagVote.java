@@ -13,6 +13,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 import lombok.Data;
@@ -25,8 +26,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class MovieTagVote {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "movie_tag_votes_id_seq")
+    @SequenceGenerator(name = "movie_tag_votes_id_seq", sequenceName = "movie_tag_votes_id_seq", allocationSize = 1)
     private Long id;
 
     // 投票した「ユーザー」

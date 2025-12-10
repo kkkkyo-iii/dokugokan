@@ -10,6 +10,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 import lombok.Data;
@@ -22,8 +23,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class Favorite {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "favorites_id_seq")
+    @SequenceGenerator(name = "favorites_id_seq", sequenceName = "favorites_id_seq", allocationSize = 1)
     private Long id;
 
     // 多対一: 多くの「お気に入り」は、一人の「ユーザー」に紐づく

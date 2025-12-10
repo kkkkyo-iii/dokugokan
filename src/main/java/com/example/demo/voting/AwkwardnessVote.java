@@ -11,6 +11,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 import lombok.Data;
@@ -22,8 +23,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class AwkwardnessVote {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "awkwardness_votes_id_seq")
+    @SequenceGenerator(name = "awkwardness_votes_id_seq", sequenceName = "awkwardness_votes_id_seq", allocationSize = 1)
     private Long id;
 
     // 投票した「ユーザー」
