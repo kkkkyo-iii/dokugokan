@@ -16,13 +16,8 @@
 
                     <div class="header-search-area">
                         <form th:action="@{/movies/result}" method="get" class="search-form-styled">
-                            <select class="search-select">
-                                <option>すべて</option>
-                                <option>作品名</option>
-                                <option>タグ</option>
-                            </select>
                             
-                            <input type="text" name="query" placeholder="映画や気分を検索..." class="search-input-styled">
+                            <input type="text" name="query" placeholder="映画を検索..." class="search-input-styled">
                             
                             <button type="submit" class="search-btn-styled">
                                 🔍
