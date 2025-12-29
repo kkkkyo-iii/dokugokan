@@ -1,4 +1,4 @@
-package com.example.demo.voting;
+package com.example.demo.movie;
 
 import java.util.List;
 

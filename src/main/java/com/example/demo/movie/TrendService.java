@@ -1,4 +1,4 @@
-package com.example.demo.voting;
+package com.example.demo.movie;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -11,7 +11,8 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.example.demo.voting.dto.MovieScoreDto;
+import com.example.demo.movie.dto.MovieScoreDto;
+import com.example.demo.voting.MovieTagVoteRepository;
 
 @Service
 public class TrendService {

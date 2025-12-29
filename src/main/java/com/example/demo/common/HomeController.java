@@ -9,9 +9,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import com.example.demo.movie.Movie;
+import com.example.demo.movie.TrendingMovie;
+import com.example.demo.movie.TrendingMovieRepository;
 import com.example.demo.voting.MovieTagVoteRepository;
-import com.example.demo.voting.TrendingMovie;
-import com.example.demo.voting.TrendingMovieRepository;
 
 
 

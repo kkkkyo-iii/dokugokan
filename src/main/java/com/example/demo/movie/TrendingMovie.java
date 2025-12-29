@@ -1,6 +1,4 @@
-package com.example.demo.voting;
-
-import com.example.demo.movie.Movie;
+package com.example.demo.movie;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

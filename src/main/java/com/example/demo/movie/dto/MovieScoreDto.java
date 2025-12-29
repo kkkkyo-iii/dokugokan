@@ -1,4 +1,4 @@
-package com.example.demo.voting.dto;
+package com.example.demo.movie.dto;
 
 import com.example.demo.movie.Movie;
 

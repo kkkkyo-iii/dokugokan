@@ -10,8 +10,8 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.example.demo.movie.Movie;
+import com.example.demo.movie.dto.MovieScoreDto;
 import com.example.demo.user.User;
-import com.example.demo.voting.dto.MovieScoreDto;
 import com.example.demo.voting.dto.TagVoteCountDto;
 
 @Repository
@@ -40,7 +40,7 @@ public interface MovieTagVoteRepository extends JpaRepository<MovieTagVote, Long
 	List<Movie> findLatestVotedMovies(Pageable pageable);
 
 	// ★トレンド集計用: 指定期間（since）以降に投票したユーザー数を映画ごとに集計
-	@Query("SELECT new com.example.demo.voting.dto.MovieScoreDto(v.movie, COUNT(DISTINCT v.user)) " +
+	@Query("SELECT new com.example.demo.movie.dto.MovieScoreDto(v.movie, COUNT(DISTINCT v.user)) " +
 			"FROM MovieTagVote v " +
 			"WHERE v.createdAt >= :since " +
 			"GROUP BY v.movie " +

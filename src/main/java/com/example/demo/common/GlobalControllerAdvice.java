@@ -7,10 +7,10 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ModelAttribute;
 
 import com.example.demo.movie.Movie;
+import com.example.demo.movie.TrendingMovie;
+import com.example.demo.movie.TrendingMovieRepository;
 import com.example.demo.voting.Tag;
 import com.example.demo.voting.TagRepository;
-import com.example.demo.voting.TrendingMovie;
-import com.example.demo.voting.TrendingMovieRepository;
 
 @ControllerAdvice
 public class GlobalControllerAdvice {

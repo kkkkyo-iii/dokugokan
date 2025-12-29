@@ -20,7 +20,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
 import com.example.demo.voting.TagRepository;
-import com.example.demo.voting.TrendingMovieRepository; // ★追加: インポート
 import com.example.demo.voting.dto.UserVoteStatusDto;
 import com.example.demo.voting.dto.VoteResultDto;
 
