@@ -1,8 +1,10 @@
 package com.example.demo.favorite;
 
-import java.util.List;
+
 import java.util.Optional;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -16,5 +18,5 @@ public interface FavoriteRepository extends JpaRepository<Favorite, Long> {
     Optional<Favorite> findByUserAndMovie(User user, Movie movie);
     
    // 追加: 特定ユーザーのお気に入りを全て取得（IDの降順＝新しい順）
-    List<Favorite> findByUserOrderByIdDesc(User user);
+    Page<Favorite> findByUser(User user, Pageable pageable);
 }

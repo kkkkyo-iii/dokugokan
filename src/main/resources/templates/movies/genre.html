@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragments/head :: head(${genreName} + 'の映画一覧')}"></head>
+
+<body>
+	<div th:replace="~{fragments/header :: header}"></div>
+	<main>
+		<h1 th:text="${genreName} + ' の映画一覧'"></h1>
+
+		<div th:if="${not #lists.isEmpty(movies)}">
+    <div th:each="movie : ${movies}">
+        <div th:replace="~{fragments/movie_card :: card(${movie})}"></div>
+    </div>
+    </div>
+
+		<div th:if="${#lists.isEmpty(movies)}">
+			<p>このジャンルに該当する映画は、現在データベースに登録されていません。</p>
+		</div>
+
+		<a href="/">検索ページに戻る</a>
+	</main>
+	<div th:replace="~{fragments/footer :: footer}"></div>
+</body>
+
+</html>

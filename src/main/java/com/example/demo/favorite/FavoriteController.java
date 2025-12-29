@@ -20,10 +20,10 @@ public class FavoriteController {
     // お気に入り登録処理
 	@PostMapping("/favorites/add/{movieId}")
     public String addFavorite(@PathVariable Long movieId, @AuthenticationPrincipal UserDetails userDetails) {
-        // ★ 2. Serviceを呼び出し、Movieオブジェクトを受け取る
+        
         Movie movie = favoriteService.addFavorite(movieId, userDetails.getUsername());
 
-        // ★ 3. MovieのTMDB IDを使って正しいURLにリダイレクト
+        //  MovieのTMDB IDを使って正しいURLにリダイレクト
         return "redirect:/movie/" + movie.getTmdbId(); 
     }
 

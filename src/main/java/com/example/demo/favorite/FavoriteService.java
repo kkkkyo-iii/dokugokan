@@ -1,5 +1,10 @@
 package com.example.demo.favorite;
 
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -82,17 +87,23 @@ public class FavoriteService {
     }
     
     /**
-     *  ユーザーのお気に入り映画リストを取得する 
+     *  ユーザーのお気に入り映画リストを取得する (ページング対応)
      * @param user 対象ユーザー
-     * @return 映画のリスト
+     * @param page ページ番号 (1始まり) ← 引数を追加
+     * @return 映画のページ情報
      */
-    public java.util.List<Movie> getFavoriteMovies(User user) {
-        // 1. リポジトリから Favorite エンティティのリストを取得
-        java.util.List<Favorite> favorites = favoriteRepository.findByUserOrderByIdDesc(user);
+ 
+    public Page<Movie> getFavoriteMovies(User user, int page) {
+        
+        // 1ページあたりの表示件数
+        int pageSize = 10;
+        
+        // ページング設定 (ページ番号は0始まりに変換、IDの降順で並べ替え)
+        Pageable pageable = PageRequest.of(page - 1, pageSize, Sort.by("id").descending());
 
-        // 2. Favorite のリストを stream で回して、中の Movie だけを取り出してリストにする
-        return favorites.stream()
-                .map(Favorite::getMovie) // Favorite から Movie を取り出す
-                .collect(java.util.stream.Collectors.toList());
+        Page<Favorite> favoritePage = favoriteRepository.findByUser(user, pageable);
+
+        // FavoriteのPageをMovieのPageに変換して返す
+        return favoritePage.map(Favorite::getMovie);
     }
 }

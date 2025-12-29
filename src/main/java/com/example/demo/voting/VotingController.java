@@ -16,9 +16,9 @@ import com.example.demo.movie.MovieInformationRepository;
 public class VotingController {
 
     private final VotingService votingService;
-    private final MovieInformationRepository movieRepository; // ★ 3. Repositoryのフィールドを追加
+    private final MovieInformationRepository movieRepository; 
 
-    // ★ 4. コンストラクタを修正
+    
     public VotingController(VotingService votingService, MovieInformationRepository movieRepository) {
         this.votingService = votingService;
         this.movieRepository = movieRepository;
@@ -41,13 +41,13 @@ public class VotingController {
         // 2. Serviceに全ての処理を委任
         votingService.processVotes(movieId, username, awkward, awkwardReasonTagIds, impressionTagIds);
 
-        // ★ 5. [修正] 正しいURLにリダイレクトする
+        
         // DBのID (movieId) を使って、映画のTMDB ID (tmdbId) を検索
         Movie movie = movieRepository.findById(movieId)
                 .orElseThrow(() -> new RuntimeException("Movie not found"));
         Integer tmdbId = movie.getTmdbId();
 
         // 3. 処理完了後、TMDB IDを使った正しい詳細ページURLに戻る
-        return "redirect:/movie/" + tmdbId; // "/movies/" ではなく "/movie/"
+        return "redirect:/movie/" + tmdbId; 
     }
 }

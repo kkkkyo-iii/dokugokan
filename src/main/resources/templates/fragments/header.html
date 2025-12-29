@@ -3,38 +3,106 @@
 
     <header th:fragment="header">
 
-        <div class="common-header">
+        <div class="site-header">
             
-            <div class="header-left">
-                <a th:href="@{/}"> <img th:src="@{/images/logo_image.png}" alt="ロゴ（ホームへ）" class="logo-image">
-                </a>
+            <div class="header-upper">
+                <div class="header-container">
+                    
+                    <div class="header-logo">
+                        <a th:href="@{/}">
+                            <img th:src="@{/images/logo_image.png}" alt="ロゴ" class="logo-img">
+                        </a>
+                    </div>
+
+                    <div class="header-search-area">
+                        <form th:action="@{/movies/result}" method="get" class="search-form-styled">
+                            <select class="search-select">
+                                <option>すべて</option>
+                                <option>作品名</option>
+                                <option>タグ</option>
+                            </select>
+                            
+                            <input type="text" name="query" placeholder="映画や気分を検索..." class="search-input-styled">
+                            
+                            <button type="submit" class="search-btn-styled">
+                                🔍
+                            </button>
+                        </form>
+                    </div>
+
+                    <div class="header-user-area">
+                        <div sec:authorize="isAnonymous()" class="auth-buttons">
+                            <a th:href="@{/login}" class="btn btn--primary">ログイン</a>
+                            <a th:href="@{/register}" class="btn btn-register">新規登録</a>
+                        </div>
+                        
+                        <div sec:authorize="isAuthenticated()" class="user-menu">
+                            <a th:href="@{/mypage}" class="user-icon-link">
+                                <span class="user-icon-placeholder">👤</span>
+                                <span class="user-name-label">マイページ</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
             </div>
 
-            <div class="header-search">
-                <form th:action="@{/movies/result}" method="get" class="search-form">
-                    <input type="text" name="query" placeholder="映画を検索..." class="search-input">
-                    <button type="submit" class="search-button">🔍</button>
-                </form>
-            </div>
+            <div class="header-lower">
+                <div class="header-container">
+                    <nav class="global-nav">
+                        <ul class="nav-list">
+                            
+                            <li class="nav-item">
+                                <a th:href="@{/}" class="nav-link-item">🏠 ホーム</a>
+                            </li>
 
-            <div class="header-right">
-                <div sec:authorize="isAnonymous()">
-                    <a th:href="@{/login}" class="button-login">ログイン</a>
-                    <a th:href="@{/register}" class="button-register">新規登録</a>
+                            <li class="nav-item dropdown-trigger">
+                                <a href="#" class="nav-link-item">🔥 トレンド・ランキング ▼</a>
+                                
+                                <div class="dropdown-panel">
+                                    <div class="dropdown-content">
+                                        <div class="dropdown-col">
+                                            <div class="dropdown-header">📈 急上昇の作品</div>
+                                            <ul class="dropdown-list" th:if="${headerTrendMovies != null}">
+                                                <li th:each="movie, stat : ${headerTrendMovies}">
+                                                    <a th:href="@{/movie/{tmdbId}(tmdbId=${movie.tmdbId})}">
+                                                        <span class="rank-badge" th:text="${stat.count}">1</span>
+                                                        <span th:text="${movie.title}">タイトル</span>
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        <div class="dropdown-col">
+                                            <div class="dropdown-header">🏷️ 人気のタグ</div>
+                                            <div class="dropdown-tags" th:if="${rankingTags != null}">
+                                                <a th:each="tag : ${rankingTags}" 
+                                                   th:href="@{/movies/by_tag/{id}(id=${tag.id})}" 
+                                                   class="dropdown-tag">
+                                                   <span th:text="'#' + ${tag.name}">#タグ</span>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                            
+                            <li class="nav-item">
+                                <a th:href="@{/#about}" class="nav-link-item">💡 このサイトについて</a>
+                            </li>
+                            
+
+                            <li class="nav-item">
+                                <a th:href="@{/#howto}" class="nav-link-item">📖 使い方</a>
+                            </li>
+
+                            
+                            <li class="nav-item" sec:authorize="isAuthenticated()">
+                                <form th:action="@{/logout}" method="post" style="display:inline;">
+                                    <button type="submit" class="nav-link-item btn btn--ghost">🚪 ログアウト</button>
+                                </form>
+                            </li>
+                        </ul>
+                    </nav>
                 </div>
-                <div sec:authorize="isAuthenticated()">
-                    <a th:href="@{/mypage}" class="button-mypage">マイページ</a>
-                    <form th:action="@{/logout}" method="post" class="logout-form">
-                        <button type="submit" class="button-logout">ログアウト</button>
-                    </form>
-                </div>
-            </div>
-        </div>
-		
-        <div class="sub-header" th:if="${isTopPage}">
-            <div class="sub-header-content">
-                <a th:href="@{/#about}" class="sub-nav-link">このサイトについて</a>
-                <a th:href="@{/#howto}" class="sub-nav-link">使い方</a>
             </div>
         </div>
 

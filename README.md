@@ -3,13 +3,14 @@
 
 ![Java](https://img.shields.io/badge/Java-21-ED8B00?style=for-the-badge&logo=openjdk&logoColor=white)
 ![Spring Boot](https://img.shields.io/badge/Spring_Boot-3.x-6DB33F?style=for-the-badge&logo=spring&logoColor=white)
-![MySQL](https://img.shields.io/badge/MySQL-8.0-4479A1?style=for-the-badge&logo=mysql&logoColor=white)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-316192?style=for-the-badge&logo=postgresql&logoColor=white)
 
-![デモ動画](ここに動画のGIFリンクまたは画像パス.gif)
+## 🎥 デモ動画 https://github.com/user-attachments/assets/8a0f9b69-a9ad-4992-88c2-be1fec546a30
+
+
 
 ## 🔗 サービス URL
-**[ここにデプロイ先のURLがあれば貼る]**
-*(※ローカル環境でのデモ動画のみの場合はこの行を削除)*
+https://dokugokan.onrender.com
 
 ## 💡 開発背景（Why）
 既存の映画レビューサイトは「星の数（面白いかどうか）」が中心で、**「誰と見るべきか」「見終わった後どんな気分になるか」**という情報が不足しています。
@@ -23,9 +24,9 @@
 ## 🛠 技術スタック
 * **Backend:** Java 21, Spring Boot 3 (Spring Security, Spring Data JPA)
 * **Frontend:** Thymeleaf, HTML5, CSS3 (Common/Flexbox layout)
-* **Database:** MySQL 8.0
+* **Database:** PostgreSQL (Neon Serverless Postgres)
 * **API:** TMDB API (The Movie Database)
-* **Infrastructure:** [Render / AWS / ローカル環境など]
+* **Infrastructure:** Render (Web Service), Neon (Database)
 
 ## 📊 データベース設計 (ER図)
 1. **正規化と拡張性**: 投票機能において、「Yes/No判定」と「タグ選択」を別テーブルに分離し、NULL許容カラムを避ける設計にしました。

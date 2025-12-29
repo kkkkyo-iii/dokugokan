@@ -1,5 +1,7 @@
 package com.example.demo.voting;
 
+import java.time.LocalDateTime;
+
 import com.example.demo.movie.Movie;
 import com.example.demo.user.User;
 
@@ -13,6 +15,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.PrePersist;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
@@ -50,4 +53,13 @@ public class MovieTagVote {
     @Enumerated(EnumType.STRING) // Enumの値を文字列としてDBに保存
     @Column(name = "vote_type", nullable = false)
     private TagVoteType voteType;
+    
+ // 投票日時（トレンド集計・新着順に使用）
+    @Column(name = "created_at", nullable = false, updatable = false)
+    private LocalDateTime createdAt;
+
+    @PrePersist
+    public void onPrePersist() {
+        this.createdAt = LocalDateTime.now();
+    }
 }

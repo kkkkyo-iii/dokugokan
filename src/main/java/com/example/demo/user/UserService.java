@@ -4,6 +4,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.example.demo.exception.ResourceNotFoundException;
+
 @Service
 public class UserService {
     private final UserRepository userRepository;
@@ -23,6 +25,6 @@ public class UserService {
     
     public User findByUsername(String username) {
         return userRepository.findByUsername(username)
-                .orElseThrow(() -> new RuntimeException("User not found: " + username));
+        		.orElseThrow(() -> new ResourceNotFoundException("User not found: " + username));
     }
 }

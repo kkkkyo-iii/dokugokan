@@ -2,16 +2,7 @@ package com.example.demo.runner;
 
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
-import com.example.demo.movie.Movie;
-import com.example.demo.movie.MovieService;
-import com.example.demo.user.User;
-import com.example.demo.user.UserRepository;
-import com.example.demo.voting.AwkwardnessVote;
-import com.example.demo.voting.AwkwardnessVoteRepository;
-import com.example.demo.voting.MovieTagVote;
-import com.example.demo.voting.MovieTagVoteRepository;
 import com.example.demo.voting.Tag;
 import com.example.demo.voting.TagRepository;
 import com.example.demo.voting.TagVoteType;
@@ -20,153 +11,84 @@ import com.example.demo.voting.TagVoteType;
 public class DataInitializer implements CommandLineRunner {
 
     private final TagRepository tagRepository;
-    private final MovieService movieService;
-    private final UserRepository userRepository;
-    private final AwkwardnessVoteRepository awkwardnessVoteRepository;
-    private final MovieTagVoteRepository movieTagVoteRepository;
 
-    public DataInitializer(TagRepository tagRepository, 
-                           MovieService movieService, 
-                           UserRepository userRepository, 
-                           AwkwardnessVoteRepository awkwardnessVoteRepository, 
-                           MovieTagVoteRepository movieTagVoteRepository) {
+    public DataInitializer(TagRepository tagRepository) {
         this.tagRepository = tagRepository;
-        this.movieService = movieService;
-        this.userRepository = userRepository;
-        this.awkwardnessVoteRepository = awkwardnessVoteRepository;
-        this.movieTagVoteRepository = movieTagVoteRepository;
+    }
+
+    private void createTagIfNotFound(String name, String headline, TagVoteType type) {
+        if (tagRepository.findByName(name).isEmpty()) {
+            Tag tag = new Tag();
+            tag.setName(name);
+            tag.setCategoryHeadline(headline);
+            tag.setTagType(type);
+            tagRepository.save(tag);
+            System.out.println("タグ: [" + name + "] (" + headline + ") を登録しました。");
+        }
     }
 
     @Override
     public void run(String... args) throws Exception {
         
-        // ★ タグの投入は完了しているためスキップします
-        // (もしタグテーブルをリセットした場合は、以前のコードでタグを再投入する必要があります)
+        System.out.println("タグ初期データの投入を開始します...");
 
-        // ★★★ 投票サンプルデータの投入 ★★★
-        //createSampleVotes();
-    }
+        // --- 1. 気まずさの要因 (AWKWARD_REASON) ---
+        String headline1_1 = "刺激・ショック";
+        createTagIfNotFound("性的な描写", headline1_1, TagVoteType.AWKWARD_REASON);
+        createTagIfNotFound("暴力・流血", headline1_1, TagVoteType.AWKWARD_REASON);
+        createTagIfNotFound("グロテスク", headline1_1, TagVoteType.AWKWARD_REASON);
+        createTagIfNotFound("ホラー・恐怖", headline1_1, TagVoteType.AWKWARD_REASON);
+        createTagIfNotFound("下品な表現", headline1_1, TagVoteType.AWKWARD_REASON);
 
-    @Transactional
-    public void createSampleVotes() {
-        System.out.println("デモ用サンプルデータの作成を開始します...");
+        String headline1_2 = "ずっしり・重め";
+        createTagIfNotFound("モヤモヤが残る", headline1_2, TagVoteType.AWKWARD_REASON);
+        createTagIfNotFound("気分が落ち込む", headline1_2, TagVoteType.AWKWARD_REASON);
+        createTagIfNotFound("胸が痛む", headline1_2, TagVoteType.AWKWARD_REASON);
+        createTagIfNotFound("考え込む", headline1_2, TagVoteType.AWKWARD_REASON);
+        createTagIfNotFound("精神的に疲れる", headline1_2, TagVoteType.AWKWARD_REASON);
+        createTagIfNotFound("シリアスな展開", headline1_2, TagVoteType.AWKWARD_REASON);
 
-        // 1. デモ対象の映画を取得 (『ジョーカー』 TMDB ID: 475557)
-        // ※ APIから取得してDBに保存します
-        Integer demoMovieTmdbId = 475557; 
-        Movie demoMovie = movieService.findOrCreateMovieByTmdbId(demoMovieTmdbId);
-        
-        System.out.println("映画: " + demoMovie.getTitle() + " を準備しました。");
+        String headline1_3 = "デリケートな話題";
+        createTagIfNotFound("不倫・浮気", headline1_3, TagVoteType.AWKWARD_REASON);
+        createTagIfNotFound("家族間の対立", headline1_3, TagVoteType.AWKWARD_REASON);
+        createTagIfNotFound("差別・偏見", headline1_3, TagVoteType.AWKWARD_REASON);
+        createTagIfNotFound("いじめ", headline1_3, TagVoteType.AWKWARD_REASON);
+        createTagIfNotFound("命の重さ", headline1_3, TagVoteType.AWKWARD_REASON);
+        createTagIfNotFound("宗教・政治", headline1_3, TagVoteType.AWKWARD_REASON);
 
-        // 2. デモ用のサンプルユーザーを10人作成
-        User u1 = createUser("demo1");
-        User u2 = createUser("demo2");
-        User u3 = createUser("demo3");
-        User u4 = createUser("demo4");
-        User u5 = createUser("demo5");
-        User u6 = createUser("demo6");
-        User u7 = createUser("demo7");
-        User u8 = createUser("demo8");
-        User u9 = createUser("demo9");
-        User u10 = createUser("demo10");
+        // --- 2. 読後感 (IMPRESSION) ---
+        String headline2_1 = "スッキリ・元気";
+        createTagIfNotFound("スカッとする", headline2_1, TagVoteType.IMPRESSION);
+        createTagIfNotFound("元気が出る", headline2_1, TagVoteType.IMPRESSION);
+        createTagIfNotFound("幸せな気分", headline2_1, TagVoteType.IMPRESSION);
+        createTagIfNotFound("笑える", headline2_1, TagVoteType.IMPRESSION);
+        createTagIfNotFound("爽やか", headline2_1, TagVoteType.IMPRESSION);
+        createTagIfNotFound("安心する", headline2_1, TagVoteType.IMPRESSION);
 
-        // 3. 必要なタグを取得 (存在しない場合はnullになるので注意)
-        Tag tagViolence = tagRepository.findByName("暴力・流血").orElse(null);
-        Tag tagMental = tagRepository.findByName("精神的に疲れる").orElse(null);
-        Tag tagNoHope = tagRepository.findByName("理不尽・救いがない").orElse(null);
-        
-        Tag tagDeep = tagRepository.findByName("考えさせられる").orElse(null);
-        Tag tagActing = tagRepository.findByName("キャストがいい").orElse(null); 
-        Tag tagShock = tagRepository.findByName("衝撃の結末").orElse(null);
-        Tag tagDepress = tagRepository.findByName("気分が落ち込む").orElse(null);
+        String headline2_2 = "心が動いた";
+        createTagIfNotFound("心温まる", headline2_2, TagVoteType.IMPRESSION);
+        createTagIfNotFound("泣ける", headline2_2, TagVoteType.IMPRESSION);
+        createTagIfNotFound("感動", headline2_2, TagVoteType.IMPRESSION);
+        createTagIfNotFound("勇気をもらえる", headline2_2, TagVoteType.IMPRESSION);
+        createTagIfNotFound("やさしい気持ち", headline2_2, TagVoteType.IMPRESSION);
+        createTagIfNotFound("切ない", headline2_2, TagVoteType.IMPRESSION);
+        createTagIfNotFound("余韻が残る", headline2_2, TagVoteType.IMPRESSION);
 
-        // 4. 「気まずさ」投票 (10人中8人が「気まずい」)
-        // これで円グラフが「赤色(気まずい)」で埋まります
-        voteAwkward(u1, demoMovie, true);
-        voteAwkward(u2, demoMovie, true);
-        voteAwkward(u3, demoMovie, true);
-        voteAwkward(u4, demoMovie, true);
-        voteAwkward(u5, demoMovie, true);
-        voteAwkward(u6, demoMovie, true);
-        voteAwkward(u7, demoMovie, true);
-        voteAwkward(u8, demoMovie, true);
-        voteAwkward(u9, demoMovie, false); // 気まずくない
-        voteAwkward(u10, demoMovie, false); // 気まずくない
+        String headline2_3 = "深い・考えさせられる";
+        createTagIfNotFound("考えさせられる", headline2_3, TagVoteType.IMPRESSION);
+        createTagIfNotFound("深い", headline2_3, TagVoteType.IMPRESSION);
+        createTagIfNotFound("学びがある", headline2_3, TagVoteType.IMPRESSION);
+        createTagIfNotFound("誰かに話したい", headline2_3, TagVoteType.IMPRESSION);
+        createTagIfNotFound("新しい視点", headline2_3, TagVoteType.IMPRESSION);
 
-        // 5. 「気まずい理由」タグ投票
-        // 多くの人が「暴力・流血」「精神的に疲れる」を選んだ状態を作ります
-        if (tagViolence != null) {
-            voteTag(u1, demoMovie, tagViolence, TagVoteType.AWKWARD_REASON);
-            voteTag(u2, demoMovie, tagViolence, TagVoteType.AWKWARD_REASON);
-            voteTag(u3, demoMovie, tagViolence, TagVoteType.AWKWARD_REASON);
-            voteTag(u4, demoMovie, tagViolence, TagVoteType.AWKWARD_REASON);
-            voteTag(u5, demoMovie, tagViolence, TagVoteType.AWKWARD_REASON);
-        }
-        if (tagMental != null) {
-            voteTag(u6, demoMovie, tagMental, TagVoteType.AWKWARD_REASON);
-            voteTag(u7, demoMovie, tagMental, TagVoteType.AWKWARD_REASON);
-            voteTag(u8, demoMovie, tagMental, TagVoteType.AWKWARD_REASON);
-            voteTag(u1, demoMovie, tagMental, TagVoteType.AWKWARD_REASON);
-        }
-        if (tagNoHope != null) {
-            voteTag(u2, demoMovie, tagNoHope, TagVoteType.AWKWARD_REASON);
-            voteTag(u3, demoMovie, tagNoHope, TagVoteType.AWKWARD_REASON);
-        }
+        String headline2_4 = "センス・雰囲気";
+        createTagIfNotFound("映像が美しい", headline2_4, TagVoteType.IMPRESSION);
+        createTagIfNotFound("音楽がいい", headline2_4, TagVoteType.IMPRESSION);
+        createTagIfNotFound("世界観が好き", headline2_4, TagVoteType.IMPRESSION);
+        createTagIfNotFound("おしゃれ", headline2_4, TagVoteType.IMPRESSION);
+        createTagIfNotFound("キャストがいい", headline2_4, TagVoteType.IMPRESSION);
+        createTagIfNotFound("伏線がすごい", headline2_4, TagVoteType.IMPRESSION);
 
-        // 6. 「読後感」タグ投票
-        if (tagDeep != null) {
-            voteTag(u1, demoMovie, tagDeep, TagVoteType.IMPRESSION);
-            voteTag(u2, demoMovie, tagDeep, TagVoteType.IMPRESSION);
-            voteTag(u3, demoMovie, tagDeep, TagVoteType.IMPRESSION);
-            voteTag(u4, demoMovie, tagDeep, TagVoteType.IMPRESSION);
-        }
-        if (tagDepress != null) {
-            voteTag(u5, demoMovie, tagDepress, TagVoteType.IMPRESSION);
-            voteTag(u6, demoMovie, tagDepress, TagVoteType.IMPRESSION);
-            voteTag(u7, demoMovie, tagDepress, TagVoteType.IMPRESSION);
-        }
-        if (tagShock != null) {
-            voteTag(u8, demoMovie, tagShock, TagVoteType.IMPRESSION);
-            voteTag(u9, demoMovie, tagShock, TagVoteType.IMPRESSION);
-        }
-        if (tagActing != null) {
-            voteTag(u10, demoMovie, tagActing, TagVoteType.IMPRESSION);
-        }
-
-        System.out.println("デモ用サンプルデータの作成が完了しました。");
-    }
-
-    // --- ヘッダーメソッド ---
-
-    private User createUser(String username) {
-        return userRepository.findByUsername(username).orElseGet(() -> {
-            User user = new User();
-            user.setUsername(username);
-            user.setPassword("pass"); // デモ用なのでハッシュ化省略(ログインには使えません)
-            user.setRole("ROLE_USER");
-            return userRepository.save(user);
-        });
-    }
-
-    private void voteAwkward(User user, Movie movie, boolean isAwkward) {
-        if (awkwardnessVoteRepository.findByUserAndMovie(user, movie).isEmpty()) {
-            AwkwardnessVote vote = new AwkwardnessVote();
-            vote.setUser(user);
-            vote.setMovie(movie);
-            vote.setAwkward(isAwkward);
-            awkwardnessVoteRepository.save(vote);
-        }
-    }
-
-    private void voteTag(User user, Movie movie, Tag tag, TagVoteType type) {
-        // 簡易的に重複チェックなしで保存（デモ用）
-        // ※ 厳密には findByUserAndMovieAndTagAndVoteType でチェックすべきですが、
-        //    今回は createSampleVotes 自体を1回しか実行しない運用でカバーします。
-        MovieTagVote vote = new MovieTagVote();
-        vote.setUser(user);
-        vote.setMovie(movie);
-        vote.setTag(tag);
-        vote.setVoteType(type);
-        movieTagVoteRepository.save(vote);
+        System.out.println("タグ初期データの投入が完了しました。");
     }
 }

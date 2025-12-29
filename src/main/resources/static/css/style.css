@@ -1,182 +1,159 @@
-/* === フローティングボタン === */
-.floating-button {
-	position: fixed;
-	bottom: 30px;
-	right: 30px;
-	background-color: #007bff;
-	color: white;
-	padding: 15px 25px;
-	border-radius: 30px;
-	text-decoration: none;
-	font-size: 16px;
-	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-	cursor: pointer;
-	z-index: 1000;
+/* ==========================================================================
+   style.css - ページ固有のスタイル定義
+   
+   [目次]
+   1. ページ共通ユーティリティ (Page Utilities)
+   2. ホーム画面 (Home Page)
+   3. 映画検索・一覧画面 (Movies: Search, Result, List)
+   4. 映画詳細画面 (Movies: Detail)
+   5.ログイン・新規登録画面(login,register)
+   6. エラー画面
+   ========================================================================== */
+
+
+/* ==========================================================================
+   1. ページ共通ユーティリティ (Page Utilities)
+   ※ 特定のページ群で共通して使われる見出しや空状態のデザイン
+   ========================================================================== */
+
+/* ページタイトル (マイページ、タグ一覧などで使用) */
+.page-title {
+    margin-bottom: 30px;
+    border-bottom: 2px solid var(--color-primary);
+    padding-bottom: 10px;
+    font-size: 2em;
 }
 
-/* === モーダル（ポップアップ） === */
-.modal-overlay {
-	display: none;
-	position: fixed;
-	top: 0;
-	left: 0;
-	width: 100%;
-	height: 100%;
-	background-color: rgba(0, 0, 0, 0.5);
-	justify-content: center;
-	align-items: center;
-	z-index: 2000;
+.page-title .highlight {
+    color: var(--color-primary);
 }
 
-.modal-content {
-	background-color: white;
-	padding: 30px;
-	border-radius: 8px;
-	width: 80%;
-	max-width: 600px;
-	box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-	max-height: 80vh;
-	/* 画面の高さの80%を最大値にする */
-	overflow-y: auto;
-	/* 中身がはみ出たら、縦スクロールバーを自動で表示 */
+.page-title .sub-text {
+    font-size: 0.6em;
+    color: #777;
 }
 
-.modal-close {
-	float: right;
-	font-size: 24px;
-	font-weight: bold;
-	cursor: pointer;
+/* セクションタイトル (ホームやお悩みセクションで使用) */
+/* `.section-title` は `common.css` に統合済み。ページ固有の色は必要に応じて上書きしてください。 */
+
+/* データがない時の表示エリア (Empty State) */
+.empty-state {
+    text-align: center;
+    padding: 50px;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    color: #777;
+    margin-top: 20px;
+}
+
+.empty-state p {
+    margin-bottom: 20px;
 }
 
 
+/* ==========================================================================
+   2. ホーム画面 (Home Page)
+   対象: home.html
+   ========================================================================== */
 
-/* --- ホーム画面 --- */
-
-/* --- (1) ヒーローセクション --- */
+/* --- ヒーローセクション (Hero) --- */
 .hero-section {
-	background-color: #343a40;
-	/* ダークな背景 */
-	color: white;
-	text-align: center;
-	padding: 80px 20px;
+    background-color: #343a40;
+    color: white;
+    text-align: center;
+    padding: 40px 20px;
 }
 
 .hero-title {
-	font-size: 3em;
-	margin-bottom: 20px;
+    font-size: 3em;
+    margin-bottom: 20px;
 }
 
 .hero-subtitle {
-	font-size: 1.2em;
-	line-height: 1.7;
-	margin-bottom: 40px;
+    font-size: 1.2em;
+    line-height: 1.7;
+    margin-bottom: 30px;
 }
 
-.cta-button {
-	/* アクションボタン */
-	display: inline-block;
-	background-color: #007bff;
-	color: white;
-	padding: 15px 30px;
-	text-decoration: none;
-	border-radius: 5px;
-	font-size: 1.1em;
-	font-weight: bold;
-	transition: background-color 0.3s;
-}
-
-.cta-button:hover {
-	background-color: #0056b3;
-}
-
-/* --- (2) お悩みセクション --- */
+/* --- お悩みセクション (Problems) --- */
 .problems-section {
-	background-color: #f8f9fa;
-	/* 少し明るい背景 */
-	padding: 20px;
-}
-
-.problems-section .section-title {
-	color: #333;
+    background-color: #f8f9fa;
+    padding: 60px 20px;
 }
 
 .problem-list {
-	display: flex;
-	flex-direction: column;
-	gap: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
 }
 
 .problem-item {
-	display: flex;
-	align-items: center;
-	gap: 20px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
 }
 
 .problem-icon {
-	width: 80px;
-	height: 80px;
-	border-radius: 50%;
-	flex-shrink: 0;
-	/* 縮まないように */
-	filter: grayscale(100%);
-	opacity: 0.8;
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    filter: grayscale(100%);
+    opacity: 0.8;
 }
 
 .problem-bubble {
-	background-color: white;
-	border-radius: 12px;
-	padding: 20px 25px;
-	width: 100%;
-	position: relative;
-	border: 1px solid #eee;
-	box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    background-color: white;
+    border-radius: 12px;
+    padding: 20px 25px;
+    width: 100%;
+    position: relative;
+    border: 1px solid #eee;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
 }
 
 .problem-bubble p {
-	margin: 0;
-	font-size: 1.1em;
-	line-height: 1.6;
+    margin: 0;
+    font-size: 1.1em;
+    line-height: 1.6;
 }
 
 /* 吹き出しの「しっぽ」 */
 .problem-bubble::before {
-	content: '';
-	position: absolute;
-	top: 50%;
-	left: -10px;
-	margin-top: -10px;
-	border-top: 10px solid transparent;
-	border-bottom: 10px solid transparent;
-	border-right: 10px solid white;
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: -10px;
+    margin-top: -10px;
+    border-top: 10px solid transparent;
+    border-bottom: 10px solid transparent;
+    border-right: 10px solid white;
 }
 
-/* === (3) 解決策セクション (旧：特徴) === */
+/* --- 解決策セクション (Solution) --- */
 .solution-section {
-    background-color: #343a40; /* ダーク背景 */
+    background-color: #343a40;
     color: white;
-    text-align: center; /* 全体を中央揃え */
-    padding: 40px 20px;
+    text-align: center;
+    padding: 60px 20px;
 }
 
 .solution-section .section-title {
-    color: white;
-    font-size: 2.2em;
-    margin-bottom: 10px;
-    line-height: 1.4;
+    color: white; /* ここだけ文字色を白で上書き */
 }
 
 .solution-text {
     font-size: 1.1em;
     line-height: 1.8;
-    margin-bottom: 20px;
+    margin-bottom: 30px;
     opacity: 0.9;
 }
 
 .solution-image-wrapper {
-    max-width: 1100px; /* 画像の最大幅 */
+    max-width: 1000px;
     margin: 0 auto;
     padding: 10px;
-    background: rgba(255, 255, 255, 0.1); /* 薄い枠線のような背景 */
+    background: rgba(255, 255, 255, 0.1);
     border-radius: 12px;
 }
 
@@ -184,143 +161,541 @@
     width: 100%;
     height: auto;
     border-radius: 8px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.5); /* 濃い影で浮き上がらせる */
-    display: block; /* 隙間対策 */
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    display: block;
+}
+/* --- 使い方セクション (How To) --- */
+.howto-section {
+    padding: 60px 0;
+    text-align: center;
+    background-color: #fff;
 }
 
-/* === 投票結果セクション === */
-.vote-section {
-	border: 1px solid #eee;
-	border-radius: 8px;
-	padding: 20px;
-	margin-top: 25px;
-	background-color: #fdfdfd;
+.howto-steps {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    flex-wrap: wrap;
+    margin-bottom: 40px; /* ボタンとの余白 */
 }
 
-.vote-section h2 {
-	margin-top: 0;
-	border-bottom: 2px solid #007bff;
-	padding-bottom: 10px;
+.howto-step-item {
+    flex: 1;
+    min-width: 250px;
 }
 
-/* === 気まずさグラフ === */
+.howto-step-num {
+    color: var(--color-primary); /* メインカラー */
+    margin-bottom: 10px;
+}
+
+.howto-cta-button {
+    /* 既存の .cta-button に追加のマージンを与える場合 */
+    margin-top: 10px; 
+}
+
+/* ==========================================================================
+   3. 映画検索・一覧画面 (Movies: Search / List)
+   対象: search.html, result.html, genre.html, tag.html
+   ========================================================================== */
+
+/* --- 検索ボックスエリア (Search Box) --- */
+.search-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 40px 20px;
+}
+
+.search-box {
+    background: #f9f9f9;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    margin-bottom: 40px;
+    text-align: center;
+}
+
+.search-input {
+    width: 70%;
+    padding: 12px;
+    font-size: 16px;
+    border: 1px solid #ddd;
+    border-radius: 5px 0 0 5px;
+}
+
+.search-submit {
+    padding: 12px 20px;
+    font-size: 16px;
+    background-color: var(--color-primary);
+    color: white;
+    border: none;
+    border-radius: 0 5px 5px 0;
+    cursor: pointer;
+}
+
+/* --- タグクラウド (Tag Cloud) --- */
+.tag-cloud {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+}
+
+.tag-link {
+    background-color: #fff;
+    border: 1px solid var(--color-primary);
+    color: var(--color-primary);
+    padding: 8px 15px;
+    border-radius: 20px;
+    text-decoration: none;
+    font-size: 14px;
+    transition: all 0.2s;
+}
+
+.tag-link:hover {
+    background-color: var(--color-primary);
+    color: white;
+}
+
+/* --- 検索結果表示 (Result Display) --- */
+.result-display h1 {
+    margin-left: 10px;
+    margin-bottom: 20px;
+}
+
+
+/* ==========================================================================
+   4. 映画詳細画面 (Movies: Detail) - リニューアル版
+   ========================================================================== */
+
+/* --- 全体のレイアウト --- */
+/* 詳細ページ専用の背景色（bodyにクラスをつけるか、mainに適用） */
+.detail-page-body {
+    background-color: #f4f7f6;
+}
+
+.movie-detail-container {
+    max-width: 960px;
+    margin: 40px auto;
+    padding: 0 20px;
+}
+
+/* --- カード共通スタイル --- */
+.card-panel {
+    /* 共通のカードベースを common.css の .card-base に移行しました。
+       ここではページ固有の上書きを行います。 */
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05); /* 柔らかい影 */
+    padding: 30px;
+    margin-bottom: 30px;
+    border: 1px solid rgba(0, 0, 0, 0.02);
+}
+
+/* --- 1. ヘッダーエリア (ポスター + 情報) --- */
+.movie-header-card {
+    display: flex;
+    gap: 40px;
+    align-items: flex-start;
+}
+
+.movie-detail-poster {
+    width: 280px;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+    flex-shrink: 0;
+    transition: transform 0.3s ease;
+}
+
+.movie-detail-poster:hover {
+    transform: scale(1.02);
+}
+
+.movie-detail-info {
+    flex-grow: 1;
+}
+
+.movie-title {
+    margin-top: 0;
+    font-size: 2.4rem;
+    color: #2c3e50;
+    line-height: 1.2;
+    margin-bottom: 15px;
+    font-weight: 800;
+}
+
+.movie-meta-info {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-bottom: 25px;
+}
+
+/* ジャンルバッジ */
+.genre-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.genre-badge {
+    display: inline-block;
+    background-color: #eef2f5;
+    color: #555;
+    padding: 6px 14px;
+    border-radius: 50px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.2s;
+}
+
+.genre-badge:hover {
+    background-color: #dfe6ed;
+    color: #333;
+}
+
+.release-date {
+    color: #7f8c8d;
+    font-size: 0.95rem;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.movie-overview {
+    line-height: 1.8;
+    color: #34495e;
+    font-size: 1.05rem;
+    margin-bottom: 30px;
+}
+
+/* アクションボタン（お気に入り） */
+.action-buttons {
+    margin-top: auto;
+}
+
+/* --- 2. 投票セクション共通 --- */
+.vote-section-title {
+    font-size: 1.5rem;
+    color: #2c3e50;
+    border-left: 6px solid #007bff;
+    padding-left: 15px;
+    margin-top: 0;
+    margin-bottom: 30px;
+    font-weight: 700;
+}
+
+.vote-subsection-title {
+    font-size: 1.1rem;
+    color: #555;
+    margin-top: 30px;
+    margin-bottom: 15px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* --- 気まずさメーター --- */
+.awkward-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: end;
+    margin-bottom: 10px;
+}
+
+.awkward-question {
+    font-weight: bold;
+    font-size: 1.1rem;
+    color: #333;
+    margin: 0;
+}
+
+.vote-total-count {
+    color: #999;
+    font-size: 0.9rem;
+}
+
 .awkward-bar-container {
-	display: flex;
-	width: 100%;
-	height: 30px;
-	background-color: #e9ecef;
-	border-radius: 5px;
-	overflow: hidden;
-	font-size: 14px;
-	font-weight: bold;
-	color: white;
-	line-height: 30px;
+    height: 44px;
+    border-radius: 12px;
+    background-color: #f1f3f5; /* データなしの時の背景 */
+    overflow: hidden;
+    display: flex;
+    font-size: 1rem;
+    font-weight: bold;
+    color: white;
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
 }
 
 .awkward-bar-yes {
-	background-color: #dc3545;
-	text-align: center;
+    background: linear-gradient(135deg, #ff8787, #e03131);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+    transition: width 1s ease-out; /* アニメーション */
 }
 
 .awkward-bar-no {
-	background-color: #28a745;
-	text-align: center;
+    background: linear-gradient(135deg, #69db7c, #2f9e44);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+    transition: width 1s ease-out;
 }
 
-/* === タグリスト === */
-.tag-list {
-	list-style: none;
-	padding-left: 0;
+/* --- タグクラウド (チップデザイン) --- */
+.tag-cloud-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
 }
 
-.tag-list li {
-	background-color: #f8f9fa;
-	border: 1px solid #ddd;
-	padding: 8px 12px;
-	margin-bottom: 5px;
-	border-radius: 5px;
+/* タグ本体 */
+.tag-chip {
+    display: inline-flex;
+    align-items: center;
+    background-color: #fff;
+    border: 1px solid #e9ecef;
+    border-radius: 50px;
+    padding: 8px 16px;
+    font-size: 0.95rem;
+    color: #495057;
+    text-decoration: none;
+    transition: all 0.2s cubic-bezier(0.25, 0.8, 0.25, 1);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.03);
 }
 
-.tag-list .tag-name {
-	font-weight: bold;
+.tag-chip:hover {
+    border-color: #007bff;
+    color: #007bff;
+    background-color: #f8f9fa;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,123,255,0.15);
 }
 
-.tag-list .tag-count {
-	float: right;
-	color: #6c757d;
+/* タグ内の票数バッジ */
+.tag-chip-count {
+    background-color: #e9ecef;
+    color: #666;
+    font-size: 0.75rem;
+    font-weight: 800;
+    padding: 2px 8px;
+    border-radius: 10px;
+    margin-left: 10px;
 }
 
-/* === 詳細を見るボタン === */
+.tag-chip:hover .tag-chip-count {
+    background-color: #dbeafe; /* 青っぽいグレー */
+    color: #0056b3;
+}
+
+/* --- もっと見るボタンのデザイン --- */
+.show-more-wrapper {
+    margin-top: 20px;
+    text-align: center;
+    border-top: 1px dashed #eee; /* 上に区切り線を入れる */
+    padding-top: 15px;
+}
+
 .show-more-button {
-	background: none;
-	border: none;
-	color: #007bff;
-	cursor: pointer;
-	padding: 5px 0;
-	text-decoration: underline;
+    background-color: white;
+    border: 1px solid #e0e0e0;
+    color: #555;
+    padding: 8px 24px;
+    border-radius: 50px; /* カプセル型 */
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px; /* 文字と矢印の間隔 */
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
 }
 
+.show-more-button:hover {
+    background-color: #f8f9fa;
+    border-color: var(--color-primary);
+    color: var(--color-primary);
+    box-shadow: 0 4px 8px rgba(0,123,255,0.15);
+    transform: translateY(-1px);
+}
+
+.show-more-button .arrow-icon {
+    font-size: 0.7rem;
+    transition: transform 0.3s ease;
+}
+
+/* 開いた状態（クラスはJSで付与） */
+.show-more-button.is-open {
+    background-color: #f1f3f5;
+    color: #777;
+    border-color: transparent;
+}
+
+.show-more-button.is-open .arrow-icon {
+    transform: rotate(180deg); /* 矢印を上向きに回転 */
+}
+
+/* デフォルトでは非表示にするクラス */
 .hidden-tags {
-	display: none;
+    display: none;
+}
+/* ==========================================================================
+   5. 認証画面 (Auth Pages)
+   対象: login.html, register.html
+   ========================================================================== */
+
+/* フォーム全体を囲むコンテナ (カード型デザイン) */
+.auth-container {
+    max-width: 400px;
+    margin: 50px auto; /* 画面中央寄せ */
+    padding: 40px;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    text-align: center;
 }
 
-.detail-movie {
-	padding-top: 15px;
+.auth-title {
+    margin-top: 0;
+    margin-bottom: 30px;
+    font-size: 1.8em;
+    color: #333;
 }
 
-.result-display h1{
-	margin-left:10px;
+/* 入力欄のグループ */
+.form-group {
+    margin-bottom: 20px;
+    text-align: left; /* ラベルは左寄せ */
 }
 
-/* 検索ページ専用のスタイル */
-        .search-container {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 40px 20px;
-        }
-        .search-box {
-            background: #f9f9f9;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-            margin-bottom: 40px;
-            text-align: center;
-        }
-        .search-input {
-            width: 70%;
-            padding: 12px;
-            font-size: 16px;
-            border: 1px solid #ddd;
-            border-radius: 5px 0 0 5px;
-        }
-        .search-submit {
-            padding: 12px 20px;
-            font-size: 16px;
-            background-color: #007bff;
-            color: white;
-            border: none;
-            border-radius: 0 5px 5px 0;
-            cursor: pointer;
-        }
-        
-        /* タグリストのスタイル */
-        .tag-cloud {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            justify-content: center;
-        }
-        .tag-link {
-            background-color: #fff;
-            border: 1px solid #007bff;
-            color: #007bff;
-            padding: 8px 15px;
-            border-radius: 20px;
-            text-decoration: none;
-            font-size: 14px;
-            transition: all 0.2s;
-        }
-        .tag-link:hover {
-            background-color: #007bff;
-            color: white;
-        }
+.form-label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+    color: #555;
+}
+
+/* 入力フィールド */
+.form-input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1rem;
+    box-sizing: border-box; /* paddingを含めた幅計算 */
+    transition: border-color 0.3s;
+}
+
+.form-input:focus {
+    border-color: #007bff;
+    outline: none;
+}
+
+
+/* ボタン (共通の形状) */
+
+.auth-btn {
+    width: 100%;
+    padding: 12px;
+    background-color: var(--color-primary); /* 基本は青色 */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 1.1em;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    margin-top: 10px;
+}
+
+/* ホバー時の挙動 (共通) */
+.auth-btn:hover {
+    background-color: var(--color-primary-hover);
+}
+
+/* --- 色の上書き用クラス --- */
+
+/* 新規登録用 (黄色) */
+.btn-register {
+    background-color: var(--color-warning);
+}
+
+/* 新規登録用のホバー色 */
+.btn-register:hover {
+    background-color: rgba(253, 166, 4, 1);
+}
+
+/* メッセージエリア (エラー・ログアウト通知) */
+.alert {
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+    font-size: 0.9em;
+    text-align: left;
+}
+
+.alert-danger {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+
+.alert-success {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+/* リンクテキスト */
+.auth-link {
+    margin-top: 20px;
+    display: block;
+    font-size: 0.9em;
+    color: #666;
+}
+/* ==========================================================================
+   6. エラー画面 (Error Page)
+   対象: error.html
+   ========================================================================== */
+
+.simple-error-wrapper {
+    text-align: center;
+    padding: 40px 20px;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+/* 背景に薄く大きく表示する数字 */
+.error-code {
+    font-size: 6em;
+    font-weight: bold;
+    color:red; 
+    opacity:0.6;
+    line-height: 1;
+    margin-bottom: -30px; /* タイトルと少し重ねる等の演出 */
+    position: relative;
+    
+}
+
+.error-title {
+	margin-top:30px;
+}
+
+.error-message {
+	color: #d9534f; 
+	font-weight: bold; 
+	margin: 10px 0;
+}
+
+
+.error-text {
+	margin-top:40px;
+    color: #666;
+    margin-bottom: 40px;
+    line-height: 1.8;
+}

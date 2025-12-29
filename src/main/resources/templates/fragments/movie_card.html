@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+
+    <div th:fragment="card(movie)" class="movie-card">
+        
+        <div class="movie-card-poster">
+            <img th:if="${movie.posterPath != null}"
+                 th:src="@{'https://image.tmdb.org/t/p/w200' + ${movie.posterPath}}"
+                 alt="ポスター画像">
+            </div>
+
+        <div class="movie-card-content">
+            <h2 class="movie-card-title">
+                <a th:href="@{/movie/{tmdbId}(tmdbId=${movie.tmdbId})}" th:text="${movie.title}">映画タイトル</a>
+            </h2>
+
+            <p class="movie-card-meta" th:if="${movie.releaseDate != null}">
+                <strong>公開日:</strong> <span th:text="${movie.releaseDate}">2025-01-01</span>
+            </p>
+
+            <p class="movie-card-overview" th:text="${movie.overview}">映画の概要...</p>
+        </div>
+    </div>
+
+</body>
+</html>

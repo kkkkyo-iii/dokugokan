@@ -18,7 +18,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class Tag {
 
-	@Id
+    @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "tags_id_seq")
     @SequenceGenerator(name = "tags_id_seq", sequenceName = "tags_id_seq", allocationSize = 1)
     private Long id;
@@ -26,12 +26,17 @@ public class Tag {
     @Column(nullable = false, unique = true)
     private String name;
     
- // ★ 3. どの見出しに属するか (例: "感覚への刺激", "気分（ポジティブ系）")
+    // どの見出しに属するか
     @Column(name = "category_headline", nullable = false)
     private String categoryHeadline;
 
-    // ★ 4. どちらの投票タイプか (AWKWARD_REASON または IMPRESSION)
-    @Enumerated(EnumType.STRING) // Enumの値を文字列としてDBに保存
+    // どちらの投票タイプか
+    @Enumerated(EnumType.STRING)
     @Column(name = "tag_type", nullable = false)
     private TagVoteType tagType;
+
+    // 総得票数 (初期値0)
+    // カウンターキャッシュ用。毎回集計せずここを読むだけで済むようにする。
+    @Column(nullable = false)
+    private Long totalVoteCount = 0L;
 }

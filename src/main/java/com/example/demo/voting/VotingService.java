@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.example.demo.exception.BusinessLogicException;
 import com.example.demo.movie.Movie;
 import com.example.demo.movie.MovieInformationRepository;
 import com.example.demo.user.User;
@@ -52,11 +53,9 @@ public class VotingService {
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new RuntimeException("ユーザーが見つかりません"));
 
-        // 2. ★★★ 公開日チェック ★★★
+        //  公開日チェック
         if (!isMovieReleased(movie)) {
-            // 公開前は何もせず終了 (またはエラーをスロー)
-            System.out.println("投票エラー: この映画はまだ公開されていません。");
-            return; 
+            throw new BusinessLogicException("この映画はまだ公開されていないため、投票できません。");
         }
 
         // 3. 「気まずさ」投票の処理 (更新または新規作成)
@@ -98,14 +97,27 @@ public class VotingService {
      * 「タグ」投票をDBに保存・更新する (既存の投票を一旦削除し、新しい投票を保存)
      */
     private void processTagVotes(User user, Movie movie, List<Long> tagIds, TagVoteType voteType) {
-        // 1. この映画に対する、このユーザーの、このタイプの古い投票をすべて削除
+        // 1. この映画に対する、このユーザーの、このタイプの古い投票を取得
         List<MovieTagVote> oldVotes = movieTagVoteRepository.findByUserAndMovieAndVoteType(user, movie, voteType);
+        
+        // 古い投票のタグのカウントを減らす
+        for (MovieTagVote vote : oldVotes) {
+            // ここで tagRepository.save(tag) ではなく、専用メソッドを呼ぶ
+            tagRepository.decrementVoteCount(vote.getTag().getId());
+        }
+        
+        // 古い投票レコードを削除
         movieTagVoteRepository.deleteAll(oldVotes);
 
         // 2. tagIdsがnullや空でない場合、新しい投票を保存
         if (tagIds != null && !tagIds.isEmpty()) {
             List<Tag> tags = tagRepository.findAllById(tagIds);
             
+            // ★追加: 新しい投票のタグのカウントを増やす
+            for (Tag tag : tags) {
+                tagRepository.incrementVoteCount(tag.getId());
+            }
+
             List<MovieTagVote> newVotes = tags.stream().map(tag -> {
                 MovieTagVote newVote = new MovieTagVote();
                 newVote.setUser(user);

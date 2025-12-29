@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security6">
+
+<head th:replace="~{fragments/head :: head(${movie.title} + ' - 詳細')}"></head>
+
+<body class="detail-page-body">
+    <div th:replace="~{fragments/header :: header}"></div>
+
+    <main>
+        <div class="movie-detail-container">
+
+            <div class="card-panel movie-header-card">
+                <img th:if="${movie.posterPath != null}"
+                    th:src="@{'https://image.tmdb.org/t/p/w300' + ${movie.posterPath}}" alt="ポスター画像"
+                    class="movie-detail-poster">
+
+                <div class="movie-detail-info">
+                    <h1 th:text="${movie.title}" class="movie-title">映画タイトル</h1>
+
+                    <div class="movie-meta-info">
+                        <div class="genre-wrapper">
+                            <a th:each="genre : ${movie.genres}" th:href="@{/movies/by_genre/{id}(id=${genre.id})}"
+                                th:text="${genre.name}" class="genre-badge">アクション</a>
+                        </div>
+
+                        <div th:if="${movie.releaseDate != null}" class="release-date">
+                            <span>📅 公開日:</span>
+                            <span th:text="${movie.releaseDate}">2025-01-01</span>
+                        </div>
+                    </div>
+
+                    <p th:text="${movie.overview}" class="movie-overview">映画の概要...</p>
+
+                    <div th:if="${movie != null}" sec:authorize="isAuthenticated()" class="action-buttons">
+                        <div th:if="${!isFavorited}">
+                            <form th:action="@{/favorites/add/{movieId}(movieId=${movie.id})}" method="post">
+                                <button type="submit" class="btn-favorite-add">☆ お気に入りに追加</button>
+                            </form>
+                        </div>
+                        <div th:if="${isFavorited}">
+                            <form th:action="@{/favorites/remove/{movieId}(movieId=${movie.id})}" method="post">
+                                <button type="submit" class="btn-favorite-remove">★ お気に入り解除</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-panel">
+                <h2 class="vote-section-title">気まずさチェック</h2>
+
+                <div th:if="${voteResults.totalAwkwardVotes > 0}">
+                    <div class="awkward-header">
+                        <p class="awkward-question">人と一緒に見て気まずい？</p>
+                        <span class="vote-total-count">総投票数: <span
+                                th:text="${voteResults.totalAwkwardVotes}"></span>票</span>
+                    </div>
+
+                    <div class="awkward-bar-container">
+                        <div class="awkward-bar-yes" th:style="'width:' + ${voteResults.awkwardPercent} + '%'">
+                            <span th:if="${voteResults.awkwardPercent > 10}"
+                                th:text="'Yes ' + ${voteResults.awkwardPercent} + '%'"></span>
+                        </div>
+                        <div class="awkward-bar-no" th:style="'width:' + ${voteResults.notAwkwardPercent} + '%'">
+                            <span th:if="${voteResults.notAwkwardPercent > 10}"
+                                th:text="'No ' + ${voteResults.notAwkwardPercent} + '%'"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div th:if="${voteResults.totalAwkwardVotes == 0}" class="empty-message">
+                    <p>まだ投票がありません。最初の投票者になりましょう！</p>
+                </div>
+
+                <div th:if="${!#lists.isEmpty(voteResults.awkwardReasonTags)}">
+                    <h3 class="vote-subsection-title">気まずい理由</h3>
+
+                    <div class="tag-cloud-wrapper">
+                        <a th:each="tag : ${voteResults.awkwardReasonTags.subList(0, #lists.size(voteResults.awkwardReasonTags) > 3 ? 3 : #lists.size(voteResults.awkwardReasonTags))}"
+                            th:href="@{/movies/by_tag/{id}(id=${tag.tagId})}" class="tag-chip">
+                            <span th:text="${tag.tagName}">タグ名</span>
+                            <span class="tag-chip-count" th:text="${tag.voteCount}">0</span>
+                        </a>
+
+                        <div id="awkwardHiddenTags" class="hidden-tags">
+                            <a th:each="tag : ${voteResults.awkwardReasonTags.subList(3, #lists.size(voteResults.awkwardReasonTags))}"
+                                th:href="@{/movies/by_tag/{id}(id=${tag.tagId})}" class="tag-chip">
+                                <span th:text="${tag.tagName}">タグ名</span>
+                                <span class="tag-chip-count" th:text="${tag.voteCount}">0</span>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div th:if="${#lists.size(voteResults.awkwardReasonTags) > 3}" class="show-more-wrapper">
+                        <button class="show-more-button js-show-more-btn" data-target="awkwardHiddenTags">
+                            <span>もっと見る</span>
+                            <span class="arrow-icon">▼</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-panel">
+                <h2 class="vote-section-title">みんなの読後感</h2>
+
+                <div th:if="${!#lists.isEmpty(voteResults.impressionTags)}">
+                    <div class="tag-cloud-wrapper">
+                        <a th:each="tag : ${voteResults.impressionTags.subList(0, #lists.size(voteResults.impressionTags) > 5 ? 5 : #lists.size(voteResults.impressionTags))}"
+                            th:href="@{/movies/by_tag/{id}(id=${tag.tagId})}" class="tag-chip">
+                            <span th:text="${tag.tagName}">タグ名</span>
+                            <span class="tag-chip-count" th:text="${tag.voteCount}">0</span>
+                        </a>
+
+                        <div id="impressionHiddenTags" class="hidden-tags">
+                            <a th:each="tag : ${voteResults.impressionTags.subList(5, #lists.size(voteResults.impressionTags))}"
+                                th:href="@{/movies/by_tag/{id}(id=${tag.tagId})}" class="tag-chip">
+                                <span th:text="${tag.tagName}">タグ名</span>
+                                <span class="tag-chip-count" th:text="${tag.voteCount}">0</span>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div th:if="${#lists.size(voteResults.impressionTags) > 5}" class="show-more-wrapper">
+                        <button class="show-more-button js-show-more-btn" data-target="impressionHiddenTags">
+                            <span>もっと見る</span>
+                            <span class="arrow-icon">▼</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div th:if="${#lists.isEmpty(voteResults.impressionTags)}" class="empty-message">
+                    <p>まだタグがついていません。</p>
+                </div>
+            </div>
+
+        </div> <button type="button" class="floating-button" id="openModalBtn" sec:authorize="isAuthenticated()">
+            [ + 投票する ]
+        </button>
+
+        <div class="modal-overlay" id="modalOverlay">
+            <div class="modal-content">
+                <span class="modal-close" id="closeModalBtn">&times;</span>
+                <h2>映画の評価を投票する</h2>
+                <form th:action="@{/vote/{movieId}(movieId=${movie.id})}" method="post">
+                    <div th:if="${userVoteStatus.hasVoted}" class="vote-warning">
+                        <strong>注意:</strong> 既に投票済みです。再度投票すると、以前の投票内容は上書きされます。
+                    </div>
+                    <fieldset>
+                        <legend>Q1. 人と一緒に見て気まずいですか？</legend>
+                        <div>
+                            <input type="radio" id="awkward_true" name="awkward" value="true" required
+                                th:checked="${userVoteStatus.awkwardVote == true}"><label
+                                for="awkward_true">はい、気まずい</label>
+                        </div>
+                        <div>
+                            <input type="radio" id="awkward_false" name="awkward" value="false"
+                                th:checked="${userVoteStatus.awkwardVote == false}"><label
+                                for="awkward_false">いいえ、気まずくない</label>
+                        </div>
+                    </fieldset>
+                    <fieldset>
+                        <legend>Q2. （気まずい場合）その理由は？</legend>
+                        <div th:each="group : ${awkwardReasonTagGroups}">
+                            <h4 th:text="${group.key}" class="form-group-title">見出し</h4>
+                            <div th:each="tag : ${group.value}" class="checkbox-item">
+                                <input type="checkbox" th:id="'tag_awkward_' + ${tag.id}" name="awkwardReasonTagIds"
+                                    th:value="${tag.id}"
+                                    th:checked="${userVoteStatus.awkwardReasonTagIds.contains(tag.id)}"><label
+                                    th:for="'tag_awkward_' + ${tag.id}" th:text="${tag.name}">タグ名</label>
+                            </div>
+                        </div>
+                    </fieldset>
+                    <fieldset>
+                        <legend>Q3. この映画の読後感は？</legend>
+                        <div th:each="group : ${impressionTagGroups}">
+                            <h4 th:text="${group.key}" class="form-group-title">見出し</h4>
+                            <div th:each="tag : ${group.value}" class="checkbox-item">
+                                <input type="checkbox" th:id="'tag_impression_' + ${tag.id}" name="impressionTagIds"
+                                    th:value="${tag.id}"
+                                    th:checked="${userVoteStatus.impressionTagIds.contains(tag.id)}"><label
+                                    th:for="'tag_impression_' + ${tag.id}" th:text="${tag.name}">タグ名</label>
+                            </div>
+                        </div>
+                    </fieldset>
+                    <div class="form-actions">
+                        <button type="submit">投票する</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+    </main>
+
+    <div th:replace="~{fragments/footer :: footer}"></div>
+    <script th:src="@{/js/main.js}"></script>
+</body>
+
+</html>
