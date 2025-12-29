@@ -4,38 +4,88 @@
 ![Java](https://img.shields.io/badge/Java-21-ED8B00?style=for-the-badge&logo=openjdk&logoColor=white)
 ![Spring Boot](https://img.shields.io/badge/Spring_Boot-3.x-6DB33F?style=for-the-badge&logo=spring&logoColor=white)
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-316192?style=for-the-badge&logo=postgresql&logoColor=white)
+![Thymeleaf](https://img.shields.io/badge/Thymeleaf-3.1-005F0F?style=for-the-badge&logo=thymeleaf&logoColor=white)
 
-## 🎥 デモ動画 https://github.com/user-attachments/assets/8a0f9b69-a9ad-4992-88c2-be1fec546a30
+## 🎥 デモ動画
+https://github.com/user-attachments/assets/886abfcd-31a1-4b1e-b2d4-d4619b53ddcd
 
 
 
 ## 🔗 サービス URL
 https://dokugokan.onrender.com
+*(※Renderの仕様により、初回アクセス時はサーバー起動のため1分ほど時間がかかる場合があります)*
+
+---
 
 ## 💡 開発背景（Why）
-既存の映画レビューサイトは「星の数（面白いかどうか）」が中心で、**「誰と見るべきか」「見終わった後どんな気分になるか」**という情報が不足しています。
-その結果、以下のようなミスマッチが頻発していると考えました。
 
-* デートや家族鑑賞で、気まずいシーンが流れて空気が凍る（**気まずさの事故**）
-* 元気になりたい時に、評価は高いが後味が最悪な「鬱映画」を見てしまう（**読後感の事故**）
+### 「★5」評価の限界とミスマッチ
+既存の映画レビューサイトは「作品としての面白さ（星の数）」が評価軸の中心です。しかし、実際の映画鑑賞シーンでは、以下のような**「シチュエーションによる事故」**が頻発しています。
 
-本アプリケーションは、ユーザーの主観的な「感情」と「シチュエーション」を定量化・可視化することで、これらの心理的コストを最小化するために開発しました。
+1.  **気まずさの事故**: デートや家族鑑賞中に、予期せぬ過激なシーンが流れ空気が凍る。
+2.  **読後感の事故**: 元気になりたい時に、評価は高いが後味が悪い「鬱映画」を見てしまい、気分が落ち込む。
+
+### 解決策：感情の「見える化」
+本アプリケーションは、**「誰と見るべきか（気まずさ）」**と**「見終わった後どんな気分になるか（読後感）」**を定量化・可視化します。
+テキストレビューによるネタバレや誹謗中傷を排除し、「タグ」と「Yes/Noチャート」のみで直感的に判断できるプラットフォームを構築しました。
+
+---
 
 ## 🛠 技術スタック
-* **Backend:** Java 21, Spring Boot 3 (Spring Security, Spring Data JPA)
-* **Frontend:** Thymeleaf, HTML5, CSS3 (Common/Flexbox layout)
-* **Database:** PostgreSQL (Neon Serverless Postgres)
-* **API:** TMDB API (The Movie Database)
-* **Infrastructure:** Render (Web Service), Neon (Database)
+
+| Category | Tech Stack |
+|:---:|:---|
+| **Backend** | Java 21, Spring Boot 3.3 |
+| **Database** | PostgreSQL (Neon Serverless Postgres) |
+| **ORM / Data** | Spring Data JPA, Hibernate |
+| **Security** | Spring Security (BCrypt Encryption) |
+| **Frontend** | Thymeleaf, HTML5, CSS3, Vanilla JS |
+| **API** | TMDB API (The Movie Database), Spring WebClient (Reactive) |
+| **Testing** | JUnit 5, Mockito, Spring Boot Test |
+| **Infra** | Render (Web Service) |
+
+---
+
+## 🔧 こだわった技術的実装（Engineering Highlights）
+
+### 1. パフォーマンス：Read-Heavyな特性を考慮した設計
+Webサービスの特性上、圧倒的に多い「読み込み（参照）」を高速化するため、**書き込み時にコストを払う設計**を採用しました。
+
+* **カウンターキャッシュ (Counter Cache)**:
+    * タグの集計を毎回 `COUNT(*)` するのではなく、投票時（Write）に `Tag` エンティティの `totalVoteCount` を増加・減少させて保存。
+    * これにより、トップページや検索結果などのアクセス頻度が高いページで、高速なレスポンスを実現しました。
+* **非同期バッチ処理 (Async Batch Processing)**:
+    * 「トレンド集計（過去1週間の人気映画）」のような重い処理は、ユーザーアクセス時ではなく、`@Scheduled` を用いたバッチ処理としてバックグラウンドで実行。
+    * 集計結果を `TrendingMovie` テーブルに保存しておくことで、トップページの表示負荷を最小限に抑えています。
+
+### 2. 外部API連携
+全世界の映画データを保持するのはリソース的に不可能なため、**「オンデマンド・キャッシング」**戦略を取りました。
+
+1.  ユーザーが検索を実行 → DBに存在しなければ **TMDB API (WebClient)** から非同期で取得。
+2.  取得したデータを正規化して自社DB（Movies, Genresテーブル）に保存。
+3.  2回目以降のアクセスや、詳細ページでの表示は全て自社DBから高速に提供。
+
+この際、`TransactionTemplate` と `Schedulers.boundedElastic()` を適切に組み合わせ、非同期処理とDBトランザクションの整合性を担保しています。
+
+### 3. 保守性：ドメイン駆動を意識したパッケージ構成
+開発初期は `Controller/Service` というレイヤー分けでしたが、クラス増加に伴い可読性が低下しました。
+リファクタリングを行い、**「機能（ドメイン）単位」**の構成に変更しました。
+
+* `com.example.demo.movie` (映画検索・詳細)
+* `com.example.demo.voting` (投票ロジック・集計)
+* `com.example.demo.user` (認証・会員管理)
+
+これにより、機能修正時の影響範囲が明確になり、保守性が向上しました。
+
+---
 
 ## 📊 データベース設計 (ER図)
-1. **正規化と拡張性**: 投票機能において、「Yes/No判定」と「タグ選択」を別テーブルに分離し、NULL許容カラムを避ける設計にしました。
-2. **整合性の担保**: `@UniqueConstraint` を用いて、DBレベルでユーザーの重複投票を防ぐ堅牢な設計にしています。
-3. **外部キー管理**: 外部API(TMDB)のIDと、システム内部のIDを明確に区別して管理しています。
+
+データの整合性（Data Integrity）を最優先し、アプリケーション層だけでなくDB層でも `@UniqueConstraint`（複合ユニーク制約）を設定して重複投票を物理的に防止しています。
 
 ```mermaid
 erDiagram
-    USERS ||--o{ AWKWARDNESS_VOTES : "1.気まずい投票"
+    USERS ||--o{ AWKWARDNESS_VOTES : "1.気まずさ投票"
     MOVIES ||--o{ AWKWARDNESS_VOTES : "receives"
     
     USERS ||--o{ MOVIE_TAG_VOTES : "2.タグ投票"
@@ -60,62 +110,45 @@ erDiagram
         int tmdb_id "UK"
         varchar title
         text overview
-        date release_date
-    }
-
-    GENRES {
-        bigint id PK
-        int tmdb_genre_id "UK"
-        varchar name
     }
 
     TAGS {
         bigint id PK
-        varchar name "UK"
+        varchar name
         varchar category_headline
         enum tag_type
+        bigint total_vote_count "Counter Cache"
     }
 
     AWKWARDNESS_VOTES {
         bigint id PK
         boolean awkward
+        "UK(user_id, movie_id)"
     }
 
     MOVIE_TAG_VOTES {
         bigint id PK
         enum vote_type
-    }
-
-    FAVORITES {
-        bigint id PK
-    }
-
-    MOVIE_GENRES {
-        bigint movie_id FK
-        bigint genre_id FK
+        "UK(user_id, movie_id, tag_id, vote_type)"
     }
 ```
+🚀 今後の展望 (Future Roadmap)
+### 1. テスト拡充による品質担保
+現在はコア機能（投票・集計ロジック）の実装を最優先に進めてきました。
+開発を進める中で、「機能追加時に既存機能が壊れていないか」を確認する手動テストのコストが高くなってきたため、今後は**回帰テスト（Regression Testing）の自動化**に挑戦したいと考えています。
 
-## 工夫した点
-1.  **独自の投票ルールとデータの整合性:**
-    * 単に点数をつけるだけでなく、「タグ（理由）」を選んで投票する仕組みにしました。
-    * **重複投票の防止:** 一人のユーザーが同じ映画に何度も投票できないように、中間テーブル（MovieTagVote）を作成し、ユーザーIDと映画IDの組み合わせで重複を弾くように設定（ユニーク制約）しています。
-2.  **APIとDBの連携（データ取得の工夫）:**
-    * 世の中の全ての映画データを最初からDBに持つのは容量的に難しいため、**「ユーザーが検索・詳細表示した映画だけをAPIから取得し、DBに保存する」**という仕組みにしました。
-    * 一度誰かが検索した映画はDBに保存されるため、二回目以降の表示速度が速くなるように設計しています。
+* **単体テストの拡大**: 複雑な条件分岐を持つ「投票サービスのロジック」を中心に、JUnitでの検証範囲を広げる。
+* **自動化**: 手動で行っているブラウザ確認作業を、将来的にはプログラムで自動化し、開発サイクルを効率化する手法を学びたいと考えています。
 
-## 🏗 アーキテクチャ・コードの構成
-開発を進める中でコードが複雑になってきたため、保守性を意識して構成を見直しました（リファクタリング）。
+2. フロントエンドの再設計と標準化（保守性の向上）
+機能追加に伴いCSS/HTML構造が複雑化してきたため、長期的な運用に耐えうる設計へ刷新を計画しています。
 
-* **パッケージ構成の改善（レイヤー単位から機能単位へ）:**
-    * 開発当初は `Controller` `Service` といった役割ごとのフォルダ分けをしていましたが、クラスが増えるにつれて「どの機能がどこにあるか」が分かりにくくなってしまいました。
-    * 現在は `movie`（映画関連）、`user`（ユーザー関連）、`voting`（投票関連）といった**「機能（ドメイン）単位」**のパッケージ構成に変更し、関連するクラスを近くに置くことで見通しを良くする作業を行っています。
-* **役割の分担:**
-    * Controllerに処理を書きすぎないように意識しました。Controllerは「画面からの入力を受け取るだけ」にし、具体的な処理（DBへの保存や計算など）はServiceクラスに任せるようにしています。
+共通化への移行: ThymeleafのFragment機能を活用し、UIパーツ（カード、ボタン等）を共通化。
 
-## 🚀 現在の課題と今後の展望
-* **エラーハンドリングの改善:** 現在は想定外のエラーが発生した際にシステム標準のエラー画面が出てしまうことがあるため、ユーザーに分かりやすいメッセージを表示できるように修正したいと考えています。
-* **テストの自動化:** 現在は手動で動作確認をしていますが、機能追加のたびに確認するのが大変になってきました。JUnitなどを用いた自動テストを導入し、安心してコードを変更できる環境を作りたいです。
+CSS設計のルール化: クラス名の衝突を防ぎメンテナンス性を高めるため、BEMやFLOCSSといった命名規則を導入し、予測可能なスタイル設計を目指します。
+
+3. ユーザー体験（UX）の継続的な改善
+エラーハンドリングを強化し、ユーザーに対してシステムエラーではなく具体的な解決策（入力不備の指摘など）を提示するよう改修を進めます。
 
 ---
-*This product uses the TMDB API but is not endorsed or certified by TMDB.*# dokugokan
+This product uses the TMDB API but is not endorsed or certified by TMDB.
