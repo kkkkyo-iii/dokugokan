@@ -7,9 +7,8 @@
 ![Thymeleaf](https://img.shields.io/badge/Thymeleaf-3.1-005F0F?style=for-the-badge&logo=thymeleaf&logoColor=white)
 
 ## 🎥 デモ動画
-https://github.com/user-attachments/assets/886abfcd-31a1-4b1e-b2d4-d4619b53ddcd
 
-
+https://github.com/user-attachments/assets/2dde8bbf-8522-4103-8a09-b0a0251d6613
 
 ## 🔗 サービス URL
 https://dokugokan.onrender.com
